@@ -1,4 +1,4 @@
-# Cleaning the RAIS data set in Stata - Relação Anual de Informações Sociais
+# Cleaning the Relação Anual de Informações Sociais (RAIS) data set in Stata, 1985-2018
 
 This repository contains Stata code that cleans and normalizes all RAIS for years 1985-2018.
 
@@ -36,6 +36,7 @@ It provides some cleaning fixes to the original data:
 - Identified RAIS data is not public. To get access to it, one must (1) be in an university/institution that already has an agreement with the Ministério da Economia, or (2) apply for new access.
 - Run this in a server with supercomputer capabilities. RAIS files are large.
 - For advice on structuring directories and code, please refer to my [template repository](https://github.com/rdahis/paper_template).
+- Prof. Marc Muendler (UCSD) has useful [material about RAIS](https://econweb.ucsd.edu/muendler/html/brazil.html).
 
 ## Credits
 
