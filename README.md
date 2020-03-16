@@ -1,4 +1,4 @@
-# Cleaning the Relação Anual de Informações Sociais (RAIS) data set in Stata, 1985-2018
+# Cleaning the Relação Anual de Informações Sociais (RAIS) dataset in Stata, 1985-2018
 
 This repository contains Stata code that cleans and normalizes all RAIS for years 1985-2018.
 
