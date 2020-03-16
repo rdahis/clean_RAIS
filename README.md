@@ -42,7 +42,7 @@ It provides some cleaning fixes to the original data:
 
 If you benefit from code in this repository, please cite it in your work as:
 
-- Dahis, Ricardo (2020) Cleaning the RAIS dataset, 1985-2018. Github repository - https://github.com/rdahis/clean_RAIS
+- Dahis, Ricardo (2020) Cleaning the _Relação Anual de Informações Sociais_ (RAIS) dataset, 1985-2018. Github repository - https://github.com/rdahis/clean_RAIS
 
 ## Bugs, Comments and Suggestions
 
