@@ -16,6 +16,7 @@ More information about RAIS, the Brazilian matched employer-employee dataset:
 2. Paste the raw RAIS data files into `/input`.
 3. Run each year's dofile in `/src/sub`. Adjust the directory `path` to your own setup.
 4. Run the dofile `/src/sub/build_subsets.do`.
+5. Run the dofile `/src/sub/build_collapses.do`.
 
 ## Output
 
