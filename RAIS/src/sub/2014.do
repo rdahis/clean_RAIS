@@ -7,7 +7,7 @@ clear all
 cap log close
 set more off
 
-cd "/path/RAIS"
+cd "/kellogg/data/RAIS"
 
 log using "output/log/2014.log", replace
 
@@ -79,7 +79,35 @@ foreach state in `states' {
 	ren MêsFimAF3				mesfimaf3
 	ren QtdDiasAfastamento		qtdiasafas
 	
-	destring municipio clascnae20 sbclas20 tipoadm tpvinculo causadesli empem3112 mesdesli diadesli idade grinstrucao sexotrabalhador tamestab tipoestbl horascontr indceivinc tiposal indalvara indpat indsimples portdefic tpdefic raca_cor qtdiasafas causafast*, replace force
+	destring municipio tipoadm tpvinculo causadesli empem3112 mesdesli diadesli idade grinstrucao sexotrabalhador tamestab tipoestbl horascontr indceivinc tiposal indalvara indpat indsimples portdefic tpdefic raca_cor qtdiasafas causafast*, replace force
+	
+	replace PIS = trim(PIS)
+	
+	replace CPF = trim(CPF)
+	replace CPF = "" 				if length(CPF) <= 5
+	replace CPF = "00000"	+ CPF	if length(CPF) == 6
+	replace CPF = "0000"	+ CPF	if length(CPF) == 7
+	replace CPF = "000"		+ CPF	if length(CPF) == 8
+	replace CPF = "00"		+ CPF	if length(CPF) == 9
+	replace CPF = "0"		+ CPF	if length(CPF) == 10
+	
+	replace nome = trim(nome)
+	
+	replace identificad	= trim(identificad)
+	replace radiccnpj	= trim(radiccnpj)
+	replace identificad = "00000000000"	+ identificad if length(identificad) == 3
+	replace identificad = "0000000000"	+ identificad if length(identificad) == 4
+	replace identificad = "000000000"	+ identificad if length(identificad) == 5
+	replace identificad = "00000000"	+ identificad if length(identificad) == 6
+	replace identificad = "0000000"		+ identificad if length(identificad) == 7
+	replace identificad = "000000"		+ identificad if length(identificad) == 8
+	replace identificad = "00000"		+ identificad if length(identificad) == 9
+	replace identificad = "0000"		+ identificad if length(identificad) == 10
+	replace identificad = "000"			+ identificad if length(identificad) == 11
+	replace identificad = "00"			+ identificad if length(identificad) == 12
+	replace identificad = "0"			+ identificad if length(identificad) == 13
+	
+	replace radiccnpj = "" if radiccnpj == "0"
 	
 	recode empem3112 (0 = 0 Nao) (1 = 1 Sim), pre(n)label(empem3112)
 	drop empem3112
@@ -448,7 +476,6 @@ foreach state in `states' {
 		remdezembro remdezr remmedia remmedr tempempr tiposal salcontr ultrem horascontr ///
 		sbclas20 clascnae95 clascnae20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
-	// ocupacao94
 	
 	save "tmp/2014/`state'.dta", replace
 
@@ -464,9 +491,8 @@ foreach file in `states' {
 }
 *
 
+compress
+
 save "output/data/full/RAIS_2014.dta", replace
 
 log close
-
-
-

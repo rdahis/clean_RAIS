@@ -7,7 +7,7 @@ clear all
 cap log close
 set more off
 
-cd "/path/RAIS"
+cd "/kellogg/data/RAIS"
 
 log using "output/log/1998.log", replace
 
@@ -49,9 +49,26 @@ foreach state in `states' {
 	ren TipoAdmissão			tipoadm
 	ren CNAE95Classe			clascnae95
 	
-	//destring tpvinculo causadesli, replace force
-	destring municipio uf clascnae95 tpvinculo causadesli empem3112 mesdesli grinstrucao sexotrabalhador tamestab tipoestbl mesadmissao idade natjuridica horascontr, replace force
+	destring municipio uf tpvinculo causadesli empem3112 mesdesli grinstrucao sexotrabalhador tamestab tipoestbl mesadmissao idade natjuridica horascontr, replace force
 	cap destring anoadm, replace force
+	
+	replace PIS = trim(PIS)
+	
+	replace identificad	= trim(identificad)
+	replace radiccnpj	= trim(radiccnpj)
+	replace identificad = "00000000000"	+ identificad if length(identificad) == 3
+	replace identificad = "0000000000"	+ identificad if length(identificad) == 4
+	replace identificad = "000000000"	+ identificad if length(identificad) == 5
+	replace identificad = "00000000"	+ identificad if length(identificad) == 6
+	replace identificad = "0000000"		+ identificad if length(identificad) == 7
+	replace identificad = "000000"		+ identificad if length(identificad) == 8
+	replace identificad = "00000"		+ identificad if length(identificad) == 9
+	replace identificad = "0000"		+ identificad if length(identificad) == 10
+	replace identificad = "000"			+ identificad if length(identificad) == 11
+	replace identificad = "00"			+ identificad if length(identificad) == 12
+	replace identificad = "0"			+ identificad if length(identificad) == 13
+	
+	replace radiccnpj = "" if radiccnpj == "0"
 	
 	recode empem3112 (0 = 0 Nao) (1 = 1 Sim), pre(n)label(empem3112)
 	drop empem3112
@@ -282,7 +299,7 @@ foreach state in `states' {
 	la var horascontr		"Quantidade de horas contratuais por semana"
 	la var tipoadm			"Tipo de admissao"
 	la var clascnae95		"Classe CNAE 1.0 (principal atividade do estabelecimento)"
-	
+
 	order PIS identificad radiccnpj municipio uf ///
 		tpvinculo empem3112 mesadmissao causadesli mesdesli ///
 		ocupacao94 grinstrucao genero idade faixaetaria nacionalidad ///
@@ -303,9 +320,8 @@ foreach file in `states' {
 }
 *
 
+compress
+
 save "output/data/full/RAIS_1998.dta", replace
 
 log close
-
-
-

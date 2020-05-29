@@ -7,7 +7,7 @@ clear all
 cap log close
 set more off
 
-cd "/path/RAIS"
+cd "/kellogg/data/RAIS"
 
 log using "output/log/1994.log", replace
 
@@ -47,8 +47,25 @@ foreach state in `states' {
 	ren TipoAdmissão			tipoadm
 	ren IBGESubatividade		ibgeatividade
 	
-	//destring anoadm tpvinculo causadesli, replace force
 	destring municipio uf anoadm tpvinculo causadesli empem3112 mesdesli grinstrucao sexotrabalhador tamestab tipoestbl mesadmissao idade ibgeatividade natjuridica horascontr, replace force
+	
+	replace PIS = trim(PIS)
+	
+	replace identificad	= trim(identificad)
+	replace radiccnpj	= trim(radiccnpj)
+	replace identificad = "00000000000"	+ identificad if length(identificad) == 3
+	replace identificad = "0000000000"	+ identificad if length(identificad) == 4
+	replace identificad = "000000000"	+ identificad if length(identificad) == 5
+	replace identificad = "00000000"	+ identificad if length(identificad) == 6
+	replace identificad = "0000000"		+ identificad if length(identificad) == 7
+	replace identificad = "000000"		+ identificad if length(identificad) == 8
+	replace identificad = "00000"		+ identificad if length(identificad) == 9
+	replace identificad = "0000"		+ identificad if length(identificad) == 10
+	replace identificad = "000"			+ identificad if length(identificad) == 11
+	replace identificad = "00"			+ identificad if length(identificad) == 12
+	replace identificad = "0"			+ identificad if length(identificad) == 13
+	
+	replace radiccnpj = "" if radiccnpj == "0"
 	
 	recode empem3112 (0 = 0 Nao) (1 = 1 Sim), pre(n)label(empem3112)
 	drop empem3112
@@ -249,13 +266,8 @@ foreach file in `states' {
 }
 *
 
+compress
+
 save "output/data/full/RAIS_1994.dta", replace
 
 log close
-
-
-
-
-
-
-

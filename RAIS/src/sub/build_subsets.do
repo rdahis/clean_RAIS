@@ -7,158 +7,15 @@ clear all
 cap log close
 set more off
 
-cd "/path/RAIS"
+cd "/kellogg/data/RAIS"
 
 local SAMPLE		FALSE
 local SAMPLE_SIZE	5
 
+
 //----------------------------------------------------------------------------//
 // build
 //----------------------------------------------------------------------------//
-
-//------------------------------//
-// dictionary clascnae95
-//------------------------------//
-
-import excel "extra/Variables_RAIS_1985-2018.xlsx", clear sheet("clascnae95")
-
-drop in 1
-drop in 615/620
-
-split A, parse(":") destring
-ren A1 clascnae95
-gen clascnae95_name = A2 + A3
-drop A A2 A3
-
-save "tmp/clascnae95_dict.dta", replace
-
-//------------------------------//
-// mapping cnae 1.0 to cnae 2.0
-//------------------------------//
-
-import excel "extra/mappings/CNAE20_Correspondencia10x20.xls", clear sheet("CNAE 1.0 x CNAE 2")
-
-drop in 1/8
-
-keep B D
-
-ren B cnae1
-ren D cnae2
-
-la var cnae1 "CNAE 1.0"
-la var cnae2 "CNAE 2.0"
-
-replace cnae1 = subinstr(cnae1, ".", "", .)
-replace cnae1 = subinstr(cnae1, "-", "", .)
-replace cnae2 = subinstr(cnae2, ".", "", .)
-replace cnae2 = subinstr(cnae2, "-", "", .)
-
-destring, replace force
-
-drop if cnae1 == .
-
-duplicates drop	// OBS: it's m:m
-
-save "tmp/cnae1_to_cnae2.dta", replace
-
-//------------------------------//
-// mapping cnae 1.0 to sectors
-//------------------------------//
-
-import excel "extra/mappings/CNAE20_Correspondencia10x20.xls", clear sheet("CNAE 1.0 x CNAE 2")
-
-drop in 1/8
-
-keep B
-
-ren B cnae1
-
-gen sector1 = ""
-replace sector1 = "A" if inlist(substr(cnae1, 1, 2), "01", "02")
-replace sector1 = "B" if inlist(substr(cnae1, 1, 2), "05")
-replace sector1 = "C" if inlist(substr(cnae1, 1, 2), "10", "11", "13", "14")
-replace sector1 = "D" if inlist(substr(cnae1, 1, 2), "15", "16", "17", "18", "19", "20", "21", "22", "23") | ///
-						 inlist(substr(cnae1, 1, 2), "24", "25", "26", "27", "28", "29", "30", "31", "32") | ///
-						 inlist(substr(cnae1, 1, 2), "33", "34", "35", "36", "37")
-replace sector1 = "E" if inlist(substr(cnae1, 1, 2), "40", "41")
-replace sector1 = "F" if inlist(substr(cnae1, 1, 2), "45")
-replace sector1 = "G" if inlist(substr(cnae1, 1, 2), "50", "51", "52")
-replace sector1 = "H" if inlist(substr(cnae1, 1, 2), "55")
-replace sector1 = "I" if inlist(substr(cnae1, 1, 2), "60", "61", "62", "63", "64")
-replace sector1 = "J" if inlist(substr(cnae1, 1, 2), "65", "66", "67")
-replace sector1 = "K" if inlist(substr(cnae1, 1, 2), "70", "71", "72", "73", "74")
-replace sector1 = "L" if inlist(substr(cnae1, 1, 2), "75")
-replace sector1 = "M" if inlist(substr(cnae1, 1, 2), "80")
-replace sector1 = "N" if inlist(substr(cnae1, 1, 2), "85")
-replace sector1 = "O" if inlist(substr(cnae1, 1, 2), "90", "91", "92", "93")
-replace sector1 = "P" if inlist(substr(cnae1, 1, 2), "95")
-replace sector1 = "Q" if inlist(substr(cnae1, 1, 2), "99")
-la var sector1 "Economic Sector 1.0 (IBGE)"
-
-la var cnae1 "CNAE 1.0"
-
-replace cnae1 = subinstr(cnae1, ".", "", .)
-replace cnae1 = subinstr(cnae1, "-", "", .)
-
-destring cnae1, replace force
-
-drop if cnae1 == .
-
-duplicates drop
-
-save "tmp/cnae1_to_sector.dta", replace
-
-//------------------------------//
-// mapping cnae 2.0 to sectors
-//------------------------------//
-
-import excel "extra/mappings/CNAE20_Correspondencia20x10.xls", clear sheet("CNAE 2.0 x CNAE 1.0")
-
-drop in 1/12
-
-keep B
-
-ren B cnae2
-
-gen sector2 = ""
-replace sector2 = "A" if inlist(substr(cnae2, 1, 2), "01", "02", "03")
-replace sector2 = "B" if inlist(substr(cnae2, 1, 2), "05", "06", "07", "08", "09")
-replace sector2 = "C" if inlist(substr(cnae2, 1, 2), "10", "11", "13", "14", "15", "16", "17", "18", "19") | ///
-						 inlist(substr(cnae2, 1, 2), "20", "21", "22", "23", "24", "25", "26", "27", "28") | ///
-						 inlist(substr(cnae2, 1, 2), "29", "30", "31", "32", "33")
-replace sector2 = "D" if inlist(substr(cnae2, 1, 2), "35")
-replace sector2 = "E" if inlist(substr(cnae2, 1, 2), "36", "37", "38", "39")
-replace sector2 = "F" if inlist(substr(cnae2, 1, 2), "41", "42", "43")
-replace sector2 = "G" if inlist(substr(cnae2, 1, 2), "45", "46", "47")
-replace sector2 = "H" if inlist(substr(cnae2, 1, 2), "49", "50", "51", "52", "53")
-replace sector2 = "I" if inlist(substr(cnae2, 1, 2), "55", "56")
-replace sector2 = "J" if inlist(substr(cnae2, 1, 2), "58", "59", "60", "61", "62", "63")
-replace sector2 = "K" if inlist(substr(cnae2, 1, 2), "64", "65", "66")
-replace sector2 = "L" if inlist(substr(cnae2, 1, 2), "68")
-replace sector2 = "M" if inlist(substr(cnae2, 1, 2), "69", "70", "71", "72", "73", "74", "75")
-replace sector2 = "N" if inlist(substr(cnae2, 1, 2), "77", "78", "79", "80", "81", "82")
-replace sector2 = "O" if inlist(substr(cnae2, 1, 2), "84")
-replace sector2 = "P" if inlist(substr(cnae2, 1, 2), "85")
-replace sector2 = "Q" if inlist(substr(cnae2, 1, 2), "86", "87", "88")
-replace sector2 = "R" if inlist(substr(cnae2, 1, 2), "90", "91", "92", "93")
-replace sector2 = "S" if inlist(substr(cnae2, 1, 2), "94", "95", "96")
-replace sector2 = "T" if inlist(substr(cnae2, 1, 2), "97")
-replace sector2 = "U" if inlist(substr(cnae2, 1, 2), "99")
-la var sector2 "Economic Sector 2.0 (IBGE)"
-
-la var cnae2 "CNAE 2.0"
-
-replace cnae2 = subinstr(cnae2, ".", "", .)
-replace cnae2 = subinstr(cnae2, "-", "", .)
-
-destring cnae2, replace force
-
-drop if cnae2 == .
-
-duplicates drop
-
-save "tmp/cnae2_to_sector.dta", replace
-
 
 //------------------------------//
 // unifying sectors
@@ -167,84 +24,169 @@ save "tmp/cnae2_to_sector.dta", replace
 cap drop program estab_sector
 program estab_sector
 	
-	local sector	`1'
-	local year		`2'
-	
-	gen sector = ""
+	local year `1'
 	
 	if `year' >= 1995 & `year' <= 2005 {
 		
-		replace sector = "agriculture"											if `sector' == "A"
-		replace sector = "fishing"												if `sector' == "B"
-		replace sector = "extractive industry" 									if `sector' == "C"
-		replace sector = "transformation industry"								if `sector' == "D"
-		replace sector = "electricity, gas, or water"							if `sector' == "E"
-		replace sector = "construction"											if `sector' == "F"
-		replace sector = "commerce: vehicles, home objects"						if `sector' == "G"
-		replace sector = "lodging and food"										if `sector' == "H"
-		replace sector = "transportation, storage and communication"			if `sector' == "I"
-		replace sector = "finance"												if `sector' == "J"
-		replace sector = "real estate"											if `sector' == "K"
-		replace sector = "public administration, defense, or social security"	if `sector' == "L"
-		replace sector = "education"											if `sector' == "M"
-		replace sector = "health or social services"							if `sector' == "N"
-		replace sector = "other social services"								if `sector' == "O"
-		replace sector = "domestic services"									if `sector' == "P"
-		replace sector = "international organizations"							if `sector' == "Q"
+		gen sector1 = ""
+		replace sector1 = "A" if inlist(substr(cnae1, 1, 2), "01", "02")
+		replace sector1 = "B" if inlist(substr(cnae1, 1, 2), "05")
+		replace sector1 = "C" if inlist(substr(cnae1, 1, 2), "10", "11", "13", "14")
+		replace sector1 = "D" if inlist(substr(cnae1, 1, 2), "15", "16", "17", "18", "19", "20", "21", "22", "23") | ///
+								 inlist(substr(cnae1, 1, 2), "24", "25", "26", "27", "28", "29", "30", "31", "32") | ///
+								 inlist(substr(cnae1, 1, 2), "33", "34", "35", "36", "37")
+		replace sector1 = "E" if inlist(substr(cnae1, 1, 2), "40", "41")
+		replace sector1 = "F" if inlist(substr(cnae1, 1, 2), "45")
+		replace sector1 = "G" if inlist(substr(cnae1, 1, 2), "50", "51", "52")
+		replace sector1 = "H" if inlist(substr(cnae1, 1, 2), "55")
+		replace sector1 = "I" if inlist(substr(cnae1, 1, 2), "60", "61", "62", "63", "64")
+		replace sector1 = "J" if inlist(substr(cnae1, 1, 2), "65", "66", "67")
+		replace sector1 = "K" if inlist(substr(cnae1, 1, 2), "70", "71", "72", "73", "74")
+		replace sector1 = "L" if inlist(substr(cnae1, 1, 2), "75")
+		replace sector1 = "M" if inlist(substr(cnae1, 1, 2), "80")
+		replace sector1 = "N" if inlist(substr(cnae1, 1, 2), "85")
+		replace sector1 = "O" if inlist(substr(cnae1, 1, 2), "90", "91", "92", "93")
+		replace sector1 = "P" if inlist(substr(cnae1, 1, 2), "95")
+		replace sector1 = "Q" if inlist(substr(cnae1, 1, 2), "99")
+		la var  sector1 "Economic Sector 1.0 (IBGE)"
+		
+		la var  cnae1 "CNAE 1.0"
+		replace cnae1 = subinstr(cnae1, ".", "", .)
+		replace cnae1 = subinstr(cnae1, "-", "", .)
+		
+		gen 	sector_IBGE = ""
+		replace sector_IBGE = "agriculture"											if sector1 == "A"
+		replace sector_IBGE = "fishing"												if sector1 == "B"
+		replace sector_IBGE = "extractive industry" 								if sector1 == "C"
+		replace sector_IBGE = "transformation industry"								if sector1 == "D"
+		replace sector_IBGE = "electricity, gas, or water"							if sector1 == "E"
+		replace sector_IBGE = "construction"										if sector1 == "F"
+		replace sector_IBGE = "retail: vehicles, home objects"						if sector1 == "G"
+		replace sector_IBGE = "lodging and food"									if sector1 == "H"
+		replace sector_IBGE = "transportation, storage and communication"			if sector1 == "I"
+		replace sector_IBGE = "finance"												if sector1 == "J"
+		replace sector_IBGE = "real estate"											if sector1 == "K"
+		replace sector_IBGE = "public administration, defense, or social security"	if sector1 == "L"
+		replace sector_IBGE = "education"											if sector1 == "M"
+		replace sector_IBGE = "health or social services"							if sector1 == "N"
+		replace sector_IBGE = "other social services"								if sector1 == "O"
+		replace sector_IBGE = "domestic services"									if sector1 == "P"
+		replace sector_IBGE = "international organizations"							if sector1 == "Q"
+		
+		drop sector1
 		
 	}
 	else if `year' >= 2006 & `year' <= 2018 {
 		
-		replace sector = "agriculture" 											if `sector' == "A"
-		replace sector = "extractive industry"									if `sector' == "B"
-		replace sector = "transformation industry"								if `sector' == "C"
-		replace sector = "electricity, gas, or water"							if `sector' == "D"
-		replace sector = "electricity, gas, or water"							if `sector' == "E"
-		replace sector = "construction"											if `sector' == "F"
-		replace sector = "commerce: vehicles, home objects"						if `sector' == "G"
-		replace sector = "transportation, storage and communication"			if `sector' == "H"
-		replace sector = "lodging and food"										if `sector' == "I"
-		replace sector = "information or communication"							if `sector' == "J"
-		replace sector = "finance"												if `sector' == "K"
-		replace sector = "real estate"											if `sector' == "L"
-		replace sector = "clerical, science or technical"						if `sector' == "M"
-		replace sector = "administrative"										if `sector' == "N"
-		replace sector = "public administration, defense, or social security"	if `sector' == "O"
-		replace sector = "education"											if `sector' == "P"
-		replace sector = "health or social services"							if `sector' == "Q"
-		replace sector = "arts, culture or sports"								if `sector' == "R"
-		replace sector = "other services"										if `sector' == "S"
-		replace sector = "domestic services"									if `sector' == "T"
-		replace sector = "international organizations"							if `sector' == "U"
+		gen sector2 = ""
+		replace sector2 = "A" if inlist(substr(cnae2, 1, 2), "01", "02", "03")
+		replace sector2 = "B" if inlist(substr(cnae2, 1, 2), "05", "06", "07", "08", "09")
+		replace sector2 = "C" if inlist(substr(cnae2, 1, 2), "10", "11", "13", "14", "15", "16", "17", "18", "19") | ///
+								 inlist(substr(cnae2, 1, 2), "20", "21", "22", "23", "24", "25", "26", "27", "28") | ///
+								 inlist(substr(cnae2, 1, 2), "29", "30", "31", "32", "33")
+		replace sector2 = "D" if inlist(substr(cnae2, 1, 2), "35")
+		replace sector2 = "E" if inlist(substr(cnae2, 1, 2), "36", "37", "38", "39")
+		replace sector2 = "F" if inlist(substr(cnae2, 1, 2), "41", "42", "43")
+		replace sector2 = "G" if inlist(substr(cnae2, 1, 2), "45", "46", "47")
+		replace sector2 = "H" if inlist(substr(cnae2, 1, 2), "49", "50", "51", "52", "53")
+		replace sector2 = "I" if inlist(substr(cnae2, 1, 2), "55", "56")
+		replace sector2 = "J" if inlist(substr(cnae2, 1, 2), "58", "59", "60", "61", "62", "63")
+		replace sector2 = "K" if inlist(substr(cnae2, 1, 2), "64", "65", "66")
+		replace sector2 = "L" if inlist(substr(cnae2, 1, 2), "68")
+		replace sector2 = "M" if inlist(substr(cnae2, 1, 2), "69", "70", "71", "72", "73", "74", "75")
+		replace sector2 = "N" if inlist(substr(cnae2, 1, 2), "77", "78", "79", "80", "81", "82")
+		replace sector2 = "O" if inlist(substr(cnae2, 1, 2), "84")
+		replace sector2 = "P" if inlist(substr(cnae2, 1, 2), "85")
+		replace sector2 = "Q" if inlist(substr(cnae2, 1, 2), "86", "87", "88")
+		replace sector2 = "R" if inlist(substr(cnae2, 1, 2), "90", "91", "92", "93")
+		replace sector2 = "S" if inlist(substr(cnae2, 1, 2), "94", "95", "96")
+		replace sector2 = "T" if inlist(substr(cnae2, 1, 2), "97")
+		replace sector2 = "U" if inlist(substr(cnae2, 1, 2), "99")
+		la var sector2 "Economic Sector 2.0 (IBGE)"
+		
+		la var cnae2 "CNAE 2.0"
+		replace cnae2 = subinstr(cnae2, ".", "", .)
+		replace cnae2 = subinstr(cnae2, "-", "", .)
+		
+		gen 	sector_IBGE = ""
+		replace sector_IBGE = "agriculture" 										if sector2 == "A"
+		replace sector_IBGE = "extractive industry"									if sector2 == "B"
+		replace sector_IBGE = "transformation industry"								if sector2 == "C"
+		replace sector_IBGE = "electricity, gas, or water"							if sector2 == "D"
+		replace sector_IBGE = "electricity, gas, or water"							if sector2 == "E"
+		replace sector_IBGE = "construction"										if sector2 == "F"
+		replace sector_IBGE = "retail: vehicles, home objects"						if sector2 == "G"
+		replace sector_IBGE = "transportation, storage and communication"			if sector2 == "H"
+		replace sector_IBGE = "lodging and food"									if sector2 == "I"
+		replace sector_IBGE = "information or communication"						if sector2 == "J"
+		replace sector_IBGE = "finance"												if sector2 == "K"
+		replace sector_IBGE = "real estate"											if sector2 == "L"
+		replace sector_IBGE = "clerical, science or technical"						if sector2 == "M"
+		replace sector_IBGE = "administrative"										if sector2 == "N"
+		replace sector_IBGE = "public administration, defense, or social security"	if sector2 == "O"
+		replace sector_IBGE = "education"											if sector2 == "P"
+		replace sector_IBGE = "health or social services"							if sector2 == "Q"
+		replace sector_IBGE = "arts, culture or sports"								if sector2 == "R"
+		replace sector_IBGE = "other services"										if sector2 == "S"
+		replace sector_IBGE = "domestic services"									if sector2 == "T"
+		replace sector_IBGE = "international organizations"							if sector2 == "U"
+		
+		drop sector2
 		
 	}
 	*
 	
-	la define la_sector	1 "agriculture" ///
-						2 "extractive industry" ///
-						3 "transformation industry" ///
-						4 "electricity, gas, or water" ///
-						5 "construction" ///
-						6 "commerce: vehicles, home objects" ///
-						7 "transportation, storage and communication" ///
-						8 "lodging and food" ///
-						9 "information or communication" ///
-						10 "finance" ///
-						11 "real estate" ///
-						12 "clerical, science or technical" ///
-						13 "administrative" ///
-						14 "public administration, defense, or social security" ///
-						15 "education" ///
-						16 "health or social services" ///
-						17 "arts, culture or sports" ///
-						18 "other services" ///
-						19 "domestic services" ///
-						20 "international organizations", ///
+	la define la_sector_IBGE	1 "agriculture" ///
+								2 "fishing" ///
+								3 "extractive industry" ///
+								4 "transformation industry" ///
+								5 "electricity, gas, or water" ///
+								6 "construction" ///
+								7 "retail: vehicles, home objects" ///
+								8 "transportation, storage and communication" ///
+								9 "lodging and food" ///
+								10 "information or communication" ///
+								11 "finance" ///
+								12 "real estate" ///
+								13 "clerical, science or technical" ///
+								14 "administrative" ///
+								15 "public administration, defense, or social security" ///
+								16 "education" ///
+								17 "health or social services" ///
+								18 "arts, culture or sports" ///
+								19 "other services" ///
+								20 "domestic services" ///
+								21 "other social services" ///
+								22 "international organizations", ///
 		replace
 	
-	encode sector, generate(enc_sector) la(la_sector)
-	drop sector
-	ren enc_sector sector
+	encode sector_IBGE, generate(enc_sector_IBGE) la(la_sector_IBGE)
+	drop sector_IBGE
+	ren enc_sector_IBGE sector_IBGE
+	la var sector_IBGE "Sector (IBGE)"
+	
+	gen sector = .
+	replace sector = 1 if inlist(sector_IBGE, 1, 2)
+	replace sector = 2 if inlist(sector_IBGE, 3)
+	replace sector = 3 if inlist(sector_IBGE, 4, 5)
+	replace sector = 4 if inlist(sector_IBGE, 6)
+	replace sector = 5 if inlist(sector_IBGE, 7)
+	replace sector = 6 if inlist(sector_IBGE, 8, 9, 10, 11, 12, 13, 14) | ///
+						  inlist(sector_IBGE, 16, 17, 18, 19, 20, 21)
+	replace sector = 7 if inlist(sector_IBGE, 15)
+	replace sector = 8 if inlist(sector_IBGE, 22)
+	
+	la define la_sector	1 "agriculture" ///
+						2 "oil, mining and metals" ///
+						3 "manufacturing" ///
+						4 "construction" ///
+						5 "retail" ///
+						6 "other services" ///
+						7 "government" ///
+						8 "international organizations", ///
+		replace
+	
+	la val sector la_sector
 	la var sector "Sector"
 	
 end
@@ -270,12 +212,142 @@ replace CBO1994 = subinstr(CBO1994, ".", "", .)
 
 drop if CBO1994 == ""
 
-destring, replace
-
 duplicates drop CBO1994, force
+
+destring CBO1994 CBO2002, replace
 
 save "tmp/CBO1994_to_CBO2002.dta", replace
 
+/*
+//------------------------------//
+// mapping CBO1994 to ISCO1988
+// Source: Muendler et al. (2004)
+// https://econweb.ucsd.edu/muendler/html/brazil.html
+// https://econweb.ucsd.edu/muendler/docs/brazil/cbo2isco.pdf
+//------------------------------//
+
+import delimited "extra/CBO/conversao 94-ISCO88/cbo-isco-conc.csv", clear stringcols(_all)
+
+keep cboid iscoid
+
+ren cboid	CBO1994
+ren iscoid	ISCO1988
+
+la var CBO1994  "CBO 1994"
+la var ISCO1988 "ISCO 1988"
+
+replace CBO1994 = subinstr(CBO1994, "X", "0", .)
+replace CBO1994 = subinstr(CBO1994, "-", "", .)
+replace CBO1994 = subinstr(CBO1994, ".", "", .)
+
+drop if CBO1994  == ""
+drop if ISCO1988 == ""
+
+save "tmp/CBO1994_to_ISCO1988.dta", replace
+
+
+//------------------------------//
+// mapping CBO1994 and CBO2002 to ISCO1988
+// source: Emanuele Colonnelli
+//------------------------------//
+
+use "tmp/CBO1994_to_ISCO1988.dta", clear
+
+gen occup_gener =	inlist(substr(CBO1994, -2, .), "01", "02", "03", "04", "05") | /// // Note: this is unrelated to French Anatomy classification, and independent, but could be useful
+					inlist(substr(CBO1994, -2, .), "06", "07", "08", "09", "10")
+la var occup_gener "Generalist (CBO 1994)"
+
+gen occup_WC = inlist(substr(ISCO1988, 1, 1), "2", "3", "4", "5")
+la var occup_WC "White Collar (ISCO 1988)"
+
+gen occup_WC_superv = (inlist(substr(ISCO1988, 1, 1), "2", "3") & occup_gener == 1)
+la var occup_WC_superv "White Collar Supervisor (ISCO 1988)"
+
+gen occup_WC_notsuperv = inlist(substr(ISCO1988, 1, 1), "4", "5")
+replace occup_WC_notsuperv = 1 if inlist(substr(ISCO1988, 1, 1), "2", "3") & occup_gener == 0
+la var occup_WC_notsuperv "White Collar Supervisor (ISCO 1988)"
+
+gen occup_WC_top = inlist(substr(ISCO1988, 1, 1), "2", "3")
+la var occup_WC_top "White Collar Top (ISCO 1988)"
+
+gen occup_WC_others = inlist(substr(ISCO1988, 1, 1), "4", "5")
+la var occup_WC_others "White Collar Others (ISCO 1988)"
+
+gen occup_man = inlist(substr(ISCO1988, 2, 4), "121", "122", "123", "131")	// Note: ISCO88 makes distinction between Corporate Manager (121-122-123) and General Manager (131).
+la var occup_man "Manager (ISCO 1988)"										// However, it's a distinction that is not clear about layer, but rather about firm size. 
+																			// Therefore consider them equal for this.
+
+gen occup_BC = inlist(substr(ISCO1988, 1, 1), "6", "7", "8", "9")
+replace occup_BC = 1 if occup_WC_superv == 0 & occup_WC_notsuperv == 0 & occup_WC_top == 0 & occup_WC_others == 0 & occup_WC == 0 & occup_BC == 0 & occup_man == 0
+la var occup_BC "Blue Collar (ISCO 1988)"
+
+merge 1:m CBO1994 using "tmp/CBO1994_to_CBO2002.dta"
+drop if _merge == 2
+drop _merge
+
+foreach k in occup_gener occup_BC occup_WC occup_WC_superv occup_WC_notsuperv occup_WC_top occup_WC_others occup_man {
+	
+	local lab: variable label `k'
+	
+	ren `k' `k'_1994
+	
+	gen `k' = `k'_1994
+	la var `k' "`lab'"
+	
+	bys CBO2002: egen aux_`k' = max(`k') if CBO2002 != ""
+
+}
+*
+
+replace occup_gener = 1			if aux_occup_gener == 1
+replace occup_BC = 0			if aux_occup_man == 1 | aux_occup_WC_superv == 1 | aux_occup_WC_notsuperv == 1 | aux_occup_WC_top == 1 | aux_occup_WC_others == 1 | aux_occup_WC == 1
+replace occup_BC = 0			if aux_occup_man == 1 | aux_occup_WC_superv == 1 | aux_occup_WC_notsuperv == 1 | aux_occup_WC_top == 1 | aux_occup_WC_others == 1
+replace occup_WC = 0			if aux_occup_man == 1 
+replace occup_WC_others = 0		if aux_occup_man == 1 | aux_occup_WC_top == 1
+replace occup_WC_top = 0		if aux_occup_man == 1 
+replace occup_WC_notsuperv = 0	if aux_occup_man == 1 | aux_occup_WC_superv == 1
+replace occup_WC_superv = 0		if aux_occup_man == 1
+replace occup_man = 1			if aux_occup_man == 1
+
+replace occup_BC = 1 if occup_WC_superv == 0 & occup_WC_notsuperv == 0 & occup_WC_top == 0 & occup_WC_others == 0 & occup_WC == 0 & occup_BC == 0 & occup_man == 0
+
+drop aux*
+
+preserve
+	
+	keep CBO1994 occup_gener_1994 - occup_BC_1994
+	
+	foreach k in occup_gener occup_WC occup_WC_superv occup_WC_notsuperv occup_WC_top occup_WC_others occup_man occup_BC {
+		
+		ren `k'_1994 `k'
+		
+	}
+	*
+	
+	destring, replace
+	
+	drop if CBO1994 == .
+	duplicates drop
+	
+	save "tmp/CBO1994_categories.dta", replace
+	
+restore
+
+preserve
+	
+	keep CBO2002 occup_gener - occup_man
+	
+	destring, replace
+	
+	drop if CBO2002 == .
+	duplicates drop
+	
+	duplicates drop CBO2002, force	// TODO: there should be no duplicates at this stage!
+	
+	save "tmp/CBO2002_categories.dta", replace
+	
+restore
+*/
 
 //------------------------------//
 // minimum wage
@@ -310,73 +382,17 @@ keep year price_index_b2018
 save "tmp/inflation.dta", replace
 
 
-
 //----------------------------------------------------------------------------//
 // subsets
 //----------------------------------------------------------------------------//
 
 foreach year of numlist 1985(1)2018 {
 	
-	//------------------------------------------------------------------------//
-	// cleaning
-	//------------------------------------------------------------------------//
-	
-	use "output/data/full/RAIS_`year'.dta", clear
-	
-	ren PIS			id_worker_PIS
-	ren identificad	id_estab
-	ren radiccnpj	id_firm
-	ren municipio	id_munic_6
-	
-	replace id_worker_PIS = trim(id_worker_PIS)
-	
-	if `year' >= 2002 & `year' <= 2018 {
-		
-		ren CPF id_worker_CPF
-		replace id_worker_CPF = trim(id_worker_CPF)
-		replace id_worker_CPF = "00000"		+ id_worker_CPF if length(id_worker_CPF) == 6
-		replace id_worker_CPF = "0000"		+ id_worker_CPF if length(id_worker_CPF) == 7
-		replace id_worker_CPF = "000"		+ id_worker_CPF if length(id_worker_CPF) == 8
-		replace id_worker_CPF = "00"		+ id_worker_CPF if length(id_worker_CPF) == 9
-		replace id_worker_CPF = "0"			+ id_worker_CPF if length(id_worker_CPF) == 10
-		replace id_worker_CPF = "" 			if length(id_worker_CPF) <= 5
-		
-		replace nome = trim(nome)
-		
-	}
-	*
-	
-	replace id_estab = trim(id_estab)
-	replace id_firm	 = trim(id_firm)
-	replace id_estab = "00000000000"	+ id_estab if length(id_estab) == 3
-	replace id_estab = "0000000000"		+ id_estab if length(id_estab) == 4
-	replace id_estab = "000000000"		+ id_estab if length(id_estab) == 5
-	replace id_estab = "00000000"		+ id_estab if length(id_estab) == 6
-	replace id_estab = "0000000"		+ id_estab if length(id_estab) == 7
-	replace id_estab = "000000"			+ id_estab if length(id_estab) == 8
-	replace id_estab = "00000"			+ id_estab if length(id_estab) == 9
-	replace id_estab = "0000"			+ id_estab if length(id_estab) == 10
-	replace id_estab = "000"			+ id_estab if length(id_estab) == 11
-	replace id_estab = "00"				+ id_estab if length(id_estab) == 12
-	replace id_estab = "0"				+ id_estab if length(id_estab) == 13
-	
-	replace id_firm = "" if id_firm == "0"
-	
-	cap ren ocupacao94	CBO1994
-	cap ren ocup2002	CBO2002
-	
 	if "`SAMPLE'" == "TRUE" {
 		sample `SAMPLE_SIZE', by(id_munic_6)
 		save "output/data/samples/RAIS_sample`SAMPLE_SIZE'_`year'.dta", replace
 	}
-	else {
-		save "output/data/clean/RAIS_`year'_clean.dta", replace
-	}
 	*
-	
-	//------------------------------------------------------------------------//
-	// normalized
-	//------------------------------------------------------------------------//
 	
 	//------------------------------------//
 	// worker-estab-munic
@@ -386,9 +402,18 @@ foreach year of numlist 1985(1)2018 {
 		use "output/data/samples/RAIS_sample`SAMPLE_SIZE'_`year'.dta"
 	}
 	else {
-		use "output/data/clean/RAIS_`year'_clean.dta", clear
+		use "output/data/full/RAIS_`year'.dta", clear
 	}
 	*
+	
+	ren PIS			id_worker_PIS
+	ren identificad	id_estab
+	ren radiccnpj	id_firm
+	ren municipio	id_munic_6
+	
+	cap ren CPF			id_worker_CPF
+	cap ren ocupacao94	CBO1994
+	cap ren ocup2002	CBO2002
 	
 	if `year' >= 1985 & `year' <= 2001 local IDs id_worker_PIS    			 id_estab id_munic_6
 	if `year' >= 2002 & `year' <= 2018 local IDs id_worker_PIS id_worker_CPF id_estab id_munic_6
@@ -583,7 +608,9 @@ foreach year of numlist 1985(1)2018 {
 							6 "worker: agriculture, forestry or fishing" ///
 							7 "worker: industry" ///
 							8 "worker: industry" ///
-							9 "worker: repair or maintenance", replace
+							9 "worker: repair or maintenance", ///
+		replace
+	
 	la val occup_cat la_occup_cat
 	
 	//-------------------------//
@@ -619,9 +646,18 @@ foreach year of numlist 1985(1)2018 {
 		use "output/data/samples/RAIS_sample`SAMPLE_SIZE'_`year'.dta"
 	}
 	else {
-		use "output/data/clean/RAIS_`year'_clean.dta", clear
+		use "output/data/full/RAIS_`year'.dta", clear
 	}
 	*
+	
+	ren PIS			id_worker_PIS
+	ren identificad	id_estab
+	ren radiccnpj	id_firm
+	ren municipio	id_munic_6
+	
+	cap ren CPF			id_worker_CPF
+	cap ren ocupacao94	CBO1994
+	cap ren ocup2002	CBO2002
 	
 	if `year' >= 1985 & `year' <= 2001 local IDs id_worker_PIS				 id_munic_6
 	if `year' >= 2002 & `year' <= 2018 local IDs id_worker_PIS id_worker_CPF id_munic_6
@@ -706,9 +742,18 @@ foreach year of numlist 1985(1)2018 {
 		use "output/data/samples/RAIS_sample`SAMPLE_SIZE'_`year'.dta"
 	}
 	else {
-		use "output/data/clean/RAIS_`year'_clean.dta", clear
+		use "output/data/full/RAIS_`year'.dta", clear
 	}
 	*
+	
+	ren PIS			id_worker_PIS
+	ren identificad	id_estab
+	ren radiccnpj	id_firm
+	ren municipio	id_munic_6
+	
+	cap ren CPF			id_worker_CPF
+	cap ren ocupacao94	CBO1994
+	cap ren ocup2002	CBO2002
 	
 	local IDs id_estab id_firm id_munic_6
 	
@@ -738,42 +783,21 @@ foreach year of numlist 1985(1)2018 {
 	gen year = `year'
 	la var year "Year"
 	
-	//-------------------------//
-	// establishment's sector
-	//-------------------------//
-	
-	if `year' >= 1995 & `year' <= 2005 {
-		
-		gen cnae1 = clascnae95
-		la var cnae1 "CNAE 1.0"
-		
-		merge m:1 cnae1 using "tmp/cnae1_to_sector.dta"
-		drop if _merge == 2
-		drop _merge
-		
-		estab_sector sector1 `year'
-		
-	}
-	*
-	
-	if `year' >= 2006 & `year' <= 2018 {
-		
-		gen cnae2 = clascnae20
-		la var cnae2 "CNAE 2.0"
-		
-		merge m:1 cnae2 using "tmp/cnae2_to_sector.dta"
-		drop if _merge == 2
-		drop _merge
-		
-		estab_sector sector2 `year'
-		
-	}
-	*
-	
-	cap drop clascnae95
-	cap drop clascnae20
-	
 	if `year' >= 1995 {
+		
+		//-------------------------//
+		// establishment's sector
+		//-------------------------//
+		
+		cap ren clascnae95 cnae1	// years 1995-2005
+		cap la var cnae1 "CNAE 1.0"
+		
+		cap ren clascnae20 cnae2	// years 2006+
+		cap la var cnae2 "CNAE 2.0"
+		
+		estab_sector `year'
+		
+		order sector_IBGE sector, a(cnae)
 		
 		//-------------------------//
 		// types of establishment
@@ -899,6 +923,7 @@ foreach year of numlist 1985(1)2018 {
 }
 *
 
+
 //----------------------------------------------------------------------------//
 // appends and save
 //----------------------------------------------------------------------------//
@@ -927,144 +952,8 @@ if "`SAMPLE'" == "TRUE" {
 		save "output/data/normalized/RAIS_sample`SAMPLE_SIZE'_1985-2018_normalized_`k'.dta", replace
 		
 	}
-}
-*
-
-//----------------------------------------------------------------------------//
-// collapses to establishment-year level
-//----------------------------------------------------------------------------//
-
-if "`SAMPLE'" == "FALSE" {
-	
-	foreach year of numlist 1985(1)2018 {
-		
-		use "output/data/normalized/worker_estab_munic/RAIS_`year'_normalized_worker_estab_munic.dta", clear
-		
-		gen n_workers = 1
-		
-		gen churn = hired + laid_off
-		
-		if `year' <= 1993 {	// before inflation data starts
-			
-			collapse	(sum) n_workers hired laid_off churn wage_total ///
-						(mean) wage_avg, by(id_estab year)
-			
-			gen wage_pw = wage_total / n_workers
-			la var wage_pw "Wage per Worker (R$)"
-			
-		}
-		else if `year' >= 1994 {
-			
-			collapse	(sum) n_workers hired laid_off churn wage_total wage_total_def ///
-						(mean) wage_avg wage_avg_def, by(id_estab year)
-			
-			la var wage_avg_def 	"Monthly Wage (R$ 2018)"
-			la var wage_total_def	"Total Yearly Wage (R$ 2018)"
-			
-			gen wage_pw = wage_total / n_workers
-			la var wage_pw "Wage per Worker (R$)"
-			
-			gen wage_def_pw = wage_total_def / n_workers
-			la var wage_def_pw "Wage per Worker (R$ 2018)"
-			
-		}
-		*
-		
-		replace hired = . if year <= 2001	// series starts only in 2002
-		replace churn = . if year <= 2001
-		
-		la var n_workers		"Number of Workers (Total)"
-		la var hired			"Number of Hires"
-		la var laid_off			"Number of Layoffs"
-		la var churn			"Churn"
-		la var wage_avg			"Monthly Wage (R$)"
-		la var wage_total		"Total Yearly Wage (R$)"
-		
-		compress
-		
-		save "output/data/collapsed/RAIS_`year'_collapsed_estab.dta", replace
-	
-	}
 	*
-	
-	use "output/data/collapsed/RAIS_1985_collapsed_estab.dta", clear
-	foreach year of numlist 1986(1)2018 {
-		append using "output/data/collapsed/RAIS_`year'_collapsed_estab.dta"
-	}
-	*
-	
-	save "output/data/collapsed/RAIS_1985-2018_collapsed_estab.dta", replace
 	
 }
 *
-
-//----------------------------------------------------------------------------//
-// collapses to establishment-munic-year level
-//----------------------------------------------------------------------------//
-
-if "`SAMPLE'" == "FALSE" {
-	
-	foreach year of numlist 1985(1)2018 {
-		
-		use "output/data/normalized/worker_estab_munic/RAIS_`year'_normalized_worker_estab_munic.dta", clear
-		
-		gen n_workers = 1
-		
-		gen churn = hired + laid_off
-		
-		if `year' <= 1993 {	// before inflation data starts
-			
-			collapse	(sum) n_workers hired laid_off churn wage_total ///
-						(mean) wage_avg, by(id_estab id_munic_6 year)
-			
-			gen wage_pw = wage_total / n_workers
-			la var wage_pw "Wage per Worker (R$)"
-			
-		}
-		else if `year' >= 1994 {
-			
-			collapse	(sum) n_workers hired laid_off churn wage_total wage_total_def ///
-						(mean) wage_avg wage_avg_def, by(id_estab id_munic_6 year)
-			
-			la var wage_avg_def 	"Monthly Wage (R$ 2018)"
-			la var wage_total_def	"Total Yearly Wage (R$ 2018)"
-			
-			gen wage_pw = wage_total / n_workers
-			la var wage_pw "Wage per Worker (R$)"
-			
-			gen wage_def_pw = wage_total_def / n_workers
-			la var wage_def_pw "Wage per Worker (R$ 2018)"
-			
-		}
-		*
-		
-		replace hired = . if year <= 2001	// series starts only in 2002
-		replace churn = . if year <= 2001
-		
-		la var n_workers		"Number of Workers (Total)"
-		la var hired			"Number of Hires"
-		la var laid_off			"Number of Layoffs"
-		la var churn			"Churn"
-		la var wage_avg			"Monthly Wage (R$)"
-		la var wage_total		"Total Yearly Wage (R$)"
-		
-		compress
-		
-		save "output/data/collapsed/RAIS_`year'_collapsed_estab_munic.dta", replace
-	
-	}
-	*
-	
-	use "output/data/collapsed/RAIS_1985_collapsed_estab_munic.dta", clear
-	foreach year of numlist 1986(1)2018 {
-		append using "output/data/collapsed/RAIS_`year'_collapsed_estab_munic.dta"
-	}
-	*
-	
-	save "output/data/collapsed/RAIS_1985-2018_collapsed_estab_munic.dta", replace
-	
-}
-*
-
-
 

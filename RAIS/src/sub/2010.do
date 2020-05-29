@@ -7,7 +7,7 @@ clear all
 cap log close
 set more off
 
-cd "/path/RAIS"
+cd "/kellogg/data/RAIS"
 
 log using "output/log/2010.log", replace
 
@@ -64,7 +64,6 @@ foreach state in `states' {
 	ren IDENTIFICAD		identificad
 	ren RADICCNPJ		radiccnpj
 	ren NOME			nome
-	//ren CLASCNAE20		clascnae20
 	ren SBCLAS20		sbclas20
 	ren TPDEFIC			tpdefic
 	ren CAUSAFAST1		causafast1
@@ -85,9 +84,40 @@ foreach state in `states' {
 	ren QTDIASAFAS		qtdiasafas
 	ren ANOCHEGADA2		anochegbr
 	
-	//drop TIPOESTBID // igual a tipoestbl
+	gen clascnae20 = ""		// variable missing in 2010
+	replace clascnae20 = substr(sbclas20, 1, 4) if length(sbclas20) == 6
+	replace clascnae20 = substr(sbclas20, 1, 5) if length(sbclas20) == 7
+	order clascnae20, a(sbclas20)
 	
-	destring municipio sbclas20 tipoadm tpvinculo causadesli empem3112 mesdesli grinstrucao tamestab tipoestbl horascontr indceivinc tiposal indalvara indpat indsimples portdefic tpdefic raca_cor qtdiasafas causafast* anochegbr, replace force
+	destring municipio tipoadm tpvinculo causadesli empem3112 mesdesli grinstrucao tamestab tipoestbl horascontr indceivinc tiposal indalvara indpat indsimples portdefic tpdefic raca_cor qtdiasafas causafast* anochegbr, replace force
+	
+	replace PIS = trim(PIS)
+	
+	replace CPF = trim(CPF)
+	replace CPF = "" 				if length(CPF) <= 5
+	replace CPF = "00000"	+ CPF	if length(CPF) == 6
+	replace CPF = "0000"	+ CPF	if length(CPF) == 7
+	replace CPF = "000"		+ CPF	if length(CPF) == 8
+	replace CPF = "00"		+ CPF	if length(CPF) == 9
+	replace CPF = "0"		+ CPF	if length(CPF) == 10
+	
+	replace nome = trim(nome)
+	
+	replace identificad	= trim(identificad)
+	replace radiccnpj	= trim(radiccnpj)
+	replace identificad = "00000000000"	+ identificad if length(identificad) == 3
+	replace identificad = "0000000000"	+ identificad if length(identificad) == 4
+	replace identificad = "000000000"	+ identificad if length(identificad) == 5
+	replace identificad = "00000000"	+ identificad if length(identificad) == 6
+	replace identificad = "0000000"		+ identificad if length(identificad) == 7
+	replace identificad = "000000"		+ identificad if length(identificad) == 8
+	replace identificad = "00000"		+ identificad if length(identificad) == 9
+	replace identificad = "0000"		+ identificad if length(identificad) == 10
+	replace identificad = "000"			+ identificad if length(identificad) == 11
+	replace identificad = "00"			+ identificad if length(identificad) == 12
+	replace identificad = "0"			+ identificad if length(identificad) == 13
+	
+	replace radiccnpj = "" if radiccnpj == "0"
 	
 	recode empem3112 (0 = 0 Nao) (1 = 1 Sim), pre(n)label(empem3112)
 	drop empem3112
@@ -293,8 +323,6 @@ foreach state in `states' {
 	drop natjuridica
 	rename nnatjuridica natjuridica
 	
-	//destring clascnae95, replace force
-	
 	recode causafast1	(-1 = -1 "Nao se afastou")(10 = 10 "Acidente de trabalho tipico") ///
 						(20 = 20 "Acidente do trabalho de trajeto")(30 = 30 "Doenca relacionada ao trabalho") ///
 						(40 = 40 "Doenca nao relacionada ao trabalho")(50 = 50 "Licenca maternidade") ///
@@ -392,7 +420,6 @@ foreach state in `states' {
 	la var causadesli		"Causa do desligamento"
 	la var diadesli			"Dia de desligamento do trabalhador"
 	la var mesdesli			"Mes de desligamento do trabalhador"
-	//la var ocupacao94		"CBO (Classificacao Brasileira de Ocupacoes), criada em 1994"
 	la var ocup2002			"CBO (Classificacao Brasileira de Ocupacoes), criada em 2002 (6 digitos)"
 	la var grinstrucao		"Grau de instrucao"
 	la var genero			"Genero"
@@ -422,9 +449,8 @@ foreach state in `states' {
 	la var ceivinc			"Numero do CEI vinculado, caso haja algum"
 	la var indceivinc		"Indicador de estabelecimento com CEI vinculado"
 	la var nome				"Nome do trabalhador"
-	//la var clascnae95		"Classe CNAE 1.0 (principal atividade do estabelecimento)"
-	//la var clascnae20		"Classe CNAE 2.0 (principal atividade do estabelecimento)"
 	la var sbclas20			"Grupo de atividade economica, segunda a classificacao CNAE 2.0"
+	la var clascnae20		"Classe CNAE 2.0 (principal atividade do estabelecimento)"
 	la var causafast1		"Causa do primeiro afastamento do trabalhador no ano base"
 	la var causafast2		"Causa do segundo afastamento do trabalhador no ano base"
 	la var causafast3		"Causa do terceiro afastamento do trabalhador no ano base"
@@ -447,9 +473,8 @@ foreach state in `states' {
 		tpvinculo empem3112 tipoadm dtadmissao causadesli diadesli mesdesli ///
 		ocup2002 grinstrucao genero dtnascimento nacionalidad portdefic tpdefic raca_cor ///
 		remdezembro remdezr remmedia remmedr tempempr tiposal salcontr ultrem horascontr ///
-		sbclas20 tamestab natjuridica tipoestbl ///
+		sbclas20 clascnae20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
-	// clascnae95 clascnae20 ocupacao94
 	
 	save "tmp/2010/`state'.dta", replace
 
@@ -465,9 +490,8 @@ foreach file in `states' {
 }
 *
 
+compress
+
 save "output/data/full/RAIS_2010.dta", replace
 
 log close
-
-
-

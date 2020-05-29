@@ -7,11 +7,11 @@ clear all
 cap log close
 set more off
 
-cd "/path/RAIS"
+cd "/kellogg/data/RAIS"
 
 log using "output/log/1987.log", replace
 
-local states AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP
+local states AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR RS SC SE SP //TO
 
 foreach state in `states' {
 	
@@ -45,6 +45,24 @@ foreach state in `states' {
 	ren SituaçãoVínculo 		sitvinculo
 	
 	destring municipio uf anoadm tpvinculo sitvinculo causadesli empem3112 mesdesli grinstrucao sexotrabalhador tamestab tipoestbl mesadmissao ibgeatividade, replace force
+	
+	replace PIS = trim(PIS)
+	
+	replace identificad	= trim(identificad)
+	replace radiccnpj	= trim(radiccnpj)
+	replace identificad = "00000000000"	+ identificad if length(identificad) == 3
+	replace identificad = "0000000000"	+ identificad if length(identificad) == 4
+	replace identificad = "000000000"	+ identificad if length(identificad) == 5
+	replace identificad = "00000000"	+ identificad if length(identificad) == 6
+	replace identificad = "0000000"		+ identificad if length(identificad) == 7
+	replace identificad = "000000"		+ identificad if length(identificad) == 8
+	replace identificad = "00000"		+ identificad if length(identificad) == 9
+	replace identificad = "0000"		+ identificad if length(identificad) == 10
+	replace identificad = "000"			+ identificad if length(identificad) == 11
+	replace identificad = "00"			+ identificad if length(identificad) == 12
+	replace identificad = "0"			+ identificad if length(identificad) == 13
+	
+	replace radiccnpj = "" if radiccnpj == "0"
 	
 	recode empem3112 (0 = 0 Nao) (1 = 1 Sim), pre(n)label(empem3112)
 	drop empem3112
@@ -183,6 +201,8 @@ foreach file in `states' {
 	}
 }
 *
+
+compress
 
 save "output/data/full/RAIS_1987.dta", replace
 

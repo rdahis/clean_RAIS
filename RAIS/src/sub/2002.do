@@ -7,7 +7,7 @@ clear all
 cap log close
 set more off
 
-cd "/path/RAIS"
+cd "/kellogg/data/RAIS"
 
 log using "output/log/2002.log", replace
 
@@ -64,7 +64,35 @@ foreach state in `states' {
 	
 	cap drop TIPOESTBID // igual a tipoestbl
 	
-	destring municipio clascnae95 causadesli empem3112 mesdesli grinstrucao sexotrabalhador tamestab tipoestbl natjuridica horascontr indceivinc tiposal indalvara indpat indsimples, replace force
+	destring municipio causadesli empem3112 mesdesli grinstrucao sexotrabalhador tamestab tipoestbl natjuridica horascontr indceivinc tiposal indalvara indpat indsimples, replace force
+	
+	replace PIS = trim(PIS)
+	
+	replace CPF = trim(CPF)
+	replace CPF = "" 				if length(CPF) <= 5
+	replace CPF = "00000"	+ CPF	if length(CPF) == 6
+	replace CPF = "0000"	+ CPF	if length(CPF) == 7
+	replace CPF = "000"		+ CPF	if length(CPF) == 8
+	replace CPF = "00"		+ CPF	if length(CPF) == 9
+	replace CPF = "0"		+ CPF	if length(CPF) == 10
+	
+	replace nome = trim(nome)
+	
+	replace identificad	= trim(identificad)
+	replace radiccnpj	= trim(radiccnpj)
+	replace identificad = "00000000000"	+ identificad if length(identificad) == 3
+	replace identificad = "0000000000"	+ identificad if length(identificad) == 4
+	replace identificad = "000000000"	+ identificad if length(identificad) == 5
+	replace identificad = "00000000"	+ identificad if length(identificad) == 6
+	replace identificad = "0000000"		+ identificad if length(identificad) == 7
+	replace identificad = "000000"		+ identificad if length(identificad) == 8
+	replace identificad = "00000"		+ identificad if length(identificad) == 9
+	replace identificad = "0000"		+ identificad if length(identificad) == 10
+	replace identificad = "000"			+ identificad if length(identificad) == 11
+	replace identificad = "00"			+ identificad if length(identificad) == 12
+	replace identificad = "0"			+ identificad if length(identificad) == 13
+	
+	replace radiccnpj = "" if radiccnpj == "0"
 	
 	recode empem3112 (0 = 0 Nao) (1 = 1 Sim), pre(n)label(empem3112)
 	drop empem3112
@@ -617,6 +645,7 @@ foreach state in `states' {
 	la var tempempr			"Tempo de emprego do trabalhador em meses (quando acumulada, representa a soma dos meses)"
 	la var PIS				"Numero de inscricao do empregado no Cadastro PIS/PASEP"
 	la var CPF				"CPF do trabalhador"
+	la var nome				"Nome do trabalhador"
 	la var dtnascimento		"Data de nascimento do trabalhador"
 	la var numectps			"Numero CTPS do trabalhador"
 	la var identificad		"CNPJ ou CEI do estabelecimento (sem zeros a esquerda)"
@@ -628,8 +657,7 @@ foreach state in `states' {
 	la var clascnae95		"Classe CNAE 1.0 (principal atividade do estabelecimento)"
 	la var ceivinc			"Numero do CEI vinculado, caso haja algum"
 	la var indceivinc		"Indicador de estabelecimento com CEI vinculado"
-	la var nome				"Nome do trabalhador"
-
+	
 	order PIS CPF nome identificad radiccnpj municipio ///
 		tpvinculo empem3112 dtadmissao causadesli mesdesli ///
 		ocupacao94 grinstrucao genero dtnascimento nacionalidad ///
@@ -650,9 +678,8 @@ foreach file in `states' {
 }
 *
 
+compress
+
 save "output/data/full/RAIS_2002.dta", replace
 
 log close
-
-
-
