@@ -3,7 +3,7 @@
 This repository contains Stata code that cleans and normalizes all RAIS for years 1985-2018.
 
 More information about RAIS, the Brazilian matched employer-employee dataset:
-- [Base dos Dados](http://basedosdados.org/dataset/relacao-anual-de-informacoes-sociais-rais)
+- [Base dos Dados](http://basedosdados.org/dataset/br-me-rais)
 - [Ministério da Economia](http://www.rais.gov.br/sitio/index.jsf)
 
 ## Requirements
