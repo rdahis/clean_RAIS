@@ -47,4 +47,4 @@ If you benefit from code in this repository, please cite it in your work as:
 
 ## Bugs, Comments and Suggestions
 
-If you find any issues in my code, or have any suggestions for improvements, please open an issue or just email me at [rdahis@u.northwestern.edu](mailto:rdahis@u.northwestern.edu).
+If you find any issues in my code, or have any suggestions for improvements, please open an issue or just email me at [rdahis@econ.puc-rio.br](mailto:rdahis@econ.puc-rio.br).
