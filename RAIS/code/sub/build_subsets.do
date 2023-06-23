@@ -7,8 +7,6 @@ clear all
 cap log close
 set more off
 
-cd "F://data/rais"
-
 local SAMPLE		TRUE
 local SAMPLE_SIZE	5
 
