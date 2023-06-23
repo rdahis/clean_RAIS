@@ -22,5 +22,3 @@ foreach year of numlist 1985(1)2018 {
 }
 
 do "code/sub/build_subsets.do"
-
-do "code/sub/build_fake_data.do"
