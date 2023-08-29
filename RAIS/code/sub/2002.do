@@ -96,7 +96,7 @@ foreach state in `states' {
 	drop empem3112
 	ren nempem3112 empem3112
 	
-	gen aux_tpvinculo = .
+	gen     aux_tpvinculo = .
 	replace aux_tpvinculo = 10 if tpvinculo == "CLT U/PJ IND"
 	replace aux_tpvinculo = 15 if tpvinculo == "CLT U/PF IND"
 	replace aux_tpvinculo = 20 if tpvinculo == "CLT R/PJ IND"
@@ -181,10 +181,6 @@ foreach state in `states' {
 	drop indsimples
 	ren nindsimples indsimples
 	
-	replace ocupacao94 = subinstr(ocupacao94, "CBO", "", .)
-	replace ocupacao94="" if ocupacao94=="000-1"
-	destring ocupacao94, replace force
-	
 	destring grinstrucao, replace force
 	recode grinstrucao	(1 = 1 "Analfabeto") (2 = 2 "Ate 5a Incompleto") (3 = 3 "5a Completo") ///
 						(4 = 4 "6a a 9a Incompleto") (5 = 5 "9a Completo") (6 = 6 "Medio Incompleto") ///
@@ -193,7 +189,7 @@ foreach state in `states' {
 	drop grinstrucao
 	ren ngrinstrucao grinstrucao
 
-	gen masc=1 if sexotrabalhador==1
+	gen     masc=1 if sexotrabalhador==1
 	replace masc=0 if masc==.
 	recode masc(1 = 1 "Masculino")(0 = 0 "Feminino"), pre(n)label(masc)
 	drop masc sexotrabalhador

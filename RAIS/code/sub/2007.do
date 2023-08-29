@@ -158,17 +158,6 @@ foreach state in `states' {
 	drop mesdesli
 	ren nmesdesli mesdesli
 	
-	replace ocupacao94 = subinstr(ocupacao94, "CBO", "", .)
-	replace ocupacao94="" if ocupacao94=="000-1"
-	destring ocupacao94, replace force
-	
-	gen ocupacao1 = subinstr(ocup2002,"CBO","",.)
-	destring ocupacao1, replace force
-	replace ocupacao1 = 0 if ocupacao1 == .
-	recode ocupacao1 (0 = 0 "IGNORADO"), pre(n)label(ocupacao1)
-	drop ocup2002 ocupacao1
-	ren nocupacao1 ocup2002
-	
 	destring tipoadm, replace force
 	recode tipoadm	(1 = 1 "PRIM EMPREGO") (2 = 2 "REEMPREGO") (3 = 3 "TRANSF C/ONUS") ///
 					(4 = 4 "TRANSF S/ONUS") (5 = 5 "OUTROS") (6 = 6 "REINTEGRACAO") ///
@@ -410,7 +399,7 @@ foreach state in `states' {
 	la var empem3112		"Indicador de vinculo ativo em 31/12 (1 - sim; 0 - nao)"
 	la var tpvinculo		"Tipo de vinculo empregaticio"
 	la var causadesli		"Causa do desligamento"
-	la var diadesli		"Dia de desligamento do trabalhador"
+	la var diadesli			"Dia de desligamento do trabalhador"
 	la var mesdesli			"Mes de desligamento do trabalhador"
 	la var ocupacao94		"CBO (Classificacao Brasileira de Ocupacoes), criada em 1994"
 	la var ocup2002			"CBO (Classificacao Brasileira de Ocupacoes), criada em 2002 (6 digitos)"

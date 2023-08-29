@@ -142,17 +142,6 @@ foreach state in `states' {
 	drop mesdesli
 	ren nmesdesli mesdesli
 	
-	replace ocupacao94 = subinstr(ocupacao94, "CBO", "", .)
-	replace ocupacao94="" if ocupacao94=="000-1"
-	destring ocupacao94, replace force
-	
-	gen ocupacao1 = subinstr(ocup2002,"CBO","",.)
-	destring ocupacao1, replace force
-	replace ocupacao1 = 0 if ocupacao1 == .
-	recode ocupacao1 (0 = 0 "IGNORADO"), pre(n)label(ocupacao1)
-	drop ocup2002 ocupacao1
-	ren nocupacao1 ocup2002
-	
 	destring tipoadm, replace force
 	recode tipoadm	(1 = 1 "PRIM EMPREGO") (2 = 2 "REEMPREGO") (3 = 3 "TRANSF C/ONUS") ///
 					(4 = 4 "TRANSF S/ONUS") (5 = 5 "OUTROS") (6 = 6 "REINTEGRACAO") ///
@@ -187,12 +176,12 @@ foreach state in `states' {
 	drop grinstrucao
 	ren ngrinstrucao grinstrucao
 	
-	replace dtadmissao = "0" + dtadmissao if length(dtadmissao) == 7
+	replace dtadmissao   = "0" + dtadmissao if length(dtadmissao) == 7
 	replace dtnascimento = "0" + dtnascimento if length(dtnascimento) == 7
 	
-	gen genero = ""
-	replace genero="1" if lower(sexotrabalhador) == "masculino"
-	replace genero="0" if lower(sexotrabalhador) == "feminino"
+	gen     genero = ""
+	replace genero = "1" if lower(sexotrabalhador) == "masculino"
+	replace genero = "0" if lower(sexotrabalhador) == "feminino"
 	destring genero, replace
 	recode genero(1 = 1 "Masculino")(0 = 0 "Feminino"), pre(n)label(genero)
 	drop genero sexotrabalhador

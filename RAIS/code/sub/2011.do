@@ -151,16 +151,6 @@ foreach state in `states' {
 	drop mesdesli
 	ren nmesdesli mesdesli
 	
-	cap gen ocupacao1 = subinstr(ocup2002,"CBO","",.)
-	cap destring ocupacao1, replace force
-	cap replace ocupacao1 = 0 if ocupacao1 == .
-	cap recode ocupacao1 (0 = 0 "IGNORADO"), pre(n)label(ocupacao1)
-	cap drop ocup2002 ocupacao1
-	cap ren nocupacao1 ocup2002
-	cap recode ocup2002 (0 = 0 "IGNORADO"), pre(n)label(ocup2002)
-	cap drop ocup2002
-	cap ren nocup2002 ocup2002
-	
 	destring tipoadm, replace force
 	recode tipoadm	(1 = 1 "PRIM EMPREGO") (2 = 2 "REEMPREGO") (3 = 3 "TRANSF C/ONUS") ///
 					(4 = 4 "TRANSF S/ONUS") (5 = 5 "OUTROS") (6 = 6 "REINTEGRACAO") ///
@@ -200,9 +190,9 @@ foreach state in `states' {
 	
 	replace dtadmissao = "0" + dtadmissao if length(dtadmissao) == 7
 	
-	gen genero = ""
-	replace genero="1" if sexotrabalhador == 1
-	replace genero="0" if sexotrabalhador == 2
+	gen     genero = ""
+	replace genero = "1" if sexotrabalhador == 1
+	replace genero = "0" if sexotrabalhador == 2
 	destring genero, replace
 	recode genero(1 = 1 "Masculino")(0 = 0 "Feminino"), pre(n)label(genero)
 	drop genero sexotrabalhador
@@ -308,8 +298,6 @@ foreach state in `states' {
 						(-1 = -1 "IGNORADO"), pre(n)label(natjuridica)
 	drop natjuridica
 	rename nnatjuridica natjuridica
-	
-	destring clascnae95, replace force
 	
 	recode causafast1	(-1 = -1 "Nao se afastou")(10 = 10 "Acidente de trabalho tipico") ///
 						(20 = 20 "Acidente do trabalho de trajeto")(30 = 30 "Doenca relacionada ao trabalho") ///

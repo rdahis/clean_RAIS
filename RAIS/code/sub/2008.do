@@ -169,17 +169,6 @@ foreach state in `states' {
 	drop mesdesli
 	ren nmesdesli mesdesli
 	
-	replace ocupacao94 = subinstr(ocupacao94, "CBO", "", .)
-	replace ocupacao94="" if ocupacao94=="000-1"
-	destring ocupacao94, replace force
-	
-	gen ocupacao1 = subinstr(ocup2002,"CBO","",.)
-	destring ocupacao1, replace force
-	replace ocupacao1 = 0 if ocupacao1 == .
-	recode ocupacao1 (0 = 0 "IGNORADO"), pre(n)label(ocupacao1)
-	drop ocup2002 ocupacao1
-	ren nocupacao1 ocup2002
-	
 	destring tipoadm, replace force
 	recode tipoadm	(1 = 1 "PRIM EMPREGO") (2 = 2 "REEMPREGO") (3 = 3 "TRANSF C/ONUS") ///
 					(4 = 4 "TRANSF S/ONUS") (5 = 5 "OUTROS") (6 = 6 "REINTEGRACAO") ///
@@ -325,8 +314,6 @@ foreach state in `states' {
 						(-1 = -1 "IGNORADO"), pre(n)label(natjuridica)
 	drop natjuridica
 	rename nnatjuridica natjuridica
-	
-	destring clascnae95, replace force
 	
 	recode causafast1	(-1 = -1 "Nao se afastou")(10 = 10 "Acidente de trabalho tipico") ///
 						(20 = 20 "Acidente do trabalho de trajeto")(30 = 30 "Doenca relacionada ao trabalho") ///

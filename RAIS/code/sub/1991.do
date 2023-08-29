@@ -70,10 +70,6 @@ foreach state in `states' {
 	drop mesdesli
 	ren nmesdesli mesdesli
 	
-	replace ocupacao94 = subinstr(ocupacao94, "CBO", "", .)
-	replace ocupacao94="" if ocupacao94=="000-1"
-	destring ocupacao94, replace force
-	
 	destring grinstrucao, replace force
 	recode grinstrucao	(1 = 1 "Analfabeto") (2 = 2 "Ate 5a Incompleto") (3 = 3 "5a Completo") ///
 						(4 = 4 "6a a 9a Incompleto") (5 = 5 "9a Completo") (6 = 6 "Medio Incompleto") ///
@@ -82,8 +78,8 @@ foreach state in `states' {
 	drop grinstrucao
 	ren ngrinstrucao grinstrucao
 
-	gen masc=1 if sexotrabalhador==1
-	replace masc=0 if masc==.
+	gen     masc = 1 if sexotrabalhador==1
+	replace masc = 0 if masc==.
 	recode masc(1 = 1 "Masculino")(0 = 0 "Feminino"), pre(n)label(masc)
 	drop masc sexotrabalhador
 	ren nmasc genero
