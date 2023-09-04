@@ -492,17 +492,18 @@ foreach state in `states' {
 		sbclas20 clascnae95 clascnae20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
 	
-	tempfile f`state'
-	save `f`state''
+	//tempfile f`state'
+	//save `f`state''
+	save "tmp/2018_`state'.dta", replace
 
 }
 *
 
 local first : word 1 of `states'
-use `f`first'', clear
+use "tmp/2018_`first'.dta", clear
 foreach state in `states' {
 	if "`state'" != "`first'" {
-		qui append using `f`state'', force
+		qui append using "tmp/2018_`state'.dta", force
 	}
 }
 *
@@ -510,6 +511,10 @@ foreach state in `states' {
 compress
 
 save "output/data/identified/full/2018.dta", replace
+
+foreach state in `states' {
+	erase "tmp/2018_`state'.dta"
+}
 
 log close
 

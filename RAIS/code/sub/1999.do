@@ -298,17 +298,18 @@ foreach state in `states' {
 		remdezembro remmedia remdezr remmedr tempempr ///
 		clascnae95 tamestab tipoestbl natjuridica ibgesubsetor
 	
-	tempfile f`state'
-	save `f`state''
+	//tempfile f`state'
+	//save `f`state''
+	save "tmp/1999_`state'.dta", replace
 
 }
 *
 
 local first : word 1 of `states'
-use `f`first'', clear
+use "tmp/1999_`first'.dta", clear
 foreach state in `states' {
 	if "`state'" != "`first'" {
-		qui append using `f`state'', force
+		qui append using "tmp/1999_`state'.dta", force
 	}
 }
 *
@@ -317,7 +318,8 @@ compress
 
 save "output/data/identified/full/1999.dta", replace
 
+foreach state in `states' {
+	erase "tmp/1999_`state'.dta"
+}
+
 log close
-
-
-

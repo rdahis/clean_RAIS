@@ -144,6 +144,10 @@ program estab_sector
 		drop sector2
 		
 	}
+	else {
+	    
+		gen sector_IBGE = ""
+	}
 	*
 	
 	la define la_sector_IBGE	1 "agriculture" ///
@@ -475,7 +479,7 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	
 	if "`SAMPLE'" == "TRUE" {
 		!mkdir "output/data/identified/normalized_sample`SAMPLE_SIZE'/job"
-		use "output/data/identified/full_sample`SAMPLE_SIZE'/`year'.dta"
+		use "output/data/identified/full_sample`SAMPLE_SIZE'/`year'.dta", clear
 	}
 	else {
 		!mkdir "output/data/identified/normalized/job"
@@ -483,14 +487,10 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	}
 	*
 	
-	ren PIS			id_worker_PIS
-	ren identificad	id_establishment
-	ren radiccnpj	id_firm
-	ren municipio	id_municipality_6
-	
-	cap ren CPF			id_worker_CPF
-	cap ren ocupacao94	CBO1994
-	cap ren ocup2002	CBO2002
+	    ren PIS			id_worker_PIS
+	cap ren CPF	        id_worker_CPF
+	    ren identificad	id_establishment
+	    ren municipio	id_municipality_6
 	
 	if `year' >= 1985 & `year' <= 2001 local IDs id_worker_PIS    			 id_establishment id_municipality_6
 	if `year' >= 2002 & `year' <= 2018 local IDs id_worker_PIS id_worker_CPF id_establishment id_municipality_6
@@ -498,12 +498,12 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	if `year' >= 1994 & `year' <= 2018 & `year' != 2002	local tipoadm tipoadm
 	if `year' == 2002									local tipoadm
 	
-	if `year' >= 1985 & `year' <= 1993 local vars empem3112 tpvinculo			mesadmissao causadesli mesdesli CBO1994			remdezembro remmedia				 tempempr
-	if `year' >= 1994 & `year' <= 1998 local vars empem3112 tpvinculo `tipoadm' mesadmissao causadesli mesdesli CBO1994			remdezembro remmedia				 tempempr horascontr
-	if `year' >= 1999 & `year' <= 2001 local vars empem3112 tpvinculo `tipoadm' mesadmissao causadesli mesdesli CBO1994			remdezembro remmedia remdezr remmedr tempempr horascontr
-	if `year' == 2002				   local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli CBO1994			remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
-	if `year' >= 2003 & `year' <= 2009 local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli CBO1994 CBO2002 remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
-	if `year' >= 2010 & `year' <= 2018 local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli 		CBO2002 remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
+	if `year' >= 1985 & `year' <= 1993 local vars empem3112 tpvinculo			mesadmissao causadesli mesdesli ocupacao94			remdezembro remmedia				 tempempr
+	if `year' >= 1994 & `year' <= 1998 local vars empem3112 tpvinculo `tipoadm' mesadmissao causadesli mesdesli ocupacao94			remdezembro remmedia				 tempempr horascontr
+	if `year' >= 1999 & `year' <= 2001 local vars empem3112 tpvinculo `tipoadm' mesadmissao causadesli mesdesli ocupacao94			remdezembro remmedia remdezr remmedr tempempr horascontr
+	if `year' == 2002				   local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli ocupacao94			remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
+	if `year' >= 2003 & `year' <= 2009 local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli ocupacao94 ocup2002 remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
+	if `year' >= 2010 & `year' <= 2018 local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli            ocup2002 remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
 	
 	keep `IDs' `vars'
 	
@@ -617,17 +617,19 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	cap drop mesadmissao
 	cap drop mesdesli
 	
+	
+	//save "tmp/`year'_job.dta", replace
+	
 	//-------------------------//
 	// wage variables
 	//-------------------------//
 	
-	merge m:1 year using "tmp/minimum_wage.dta"
-	drop if _merge == 2
-	drop _merge
-	
-	merge m:1 year using "tmp/inflation.dta"
-	drop if _merge == 2
-	drop _merge
+	//foreach k of numlist 0/15 {
+		
+	//	use "tmp/`year'_job.dta" if type_admission == `k', clear
+		
+	merge m:1 year using "tmp/minimum_wage.dta", keep(1 3) nogenerate
+	merge m:1 year using "tmp/inflation.dta",    keep(1 3) nogenerate
 	
 	gen wage_avg = remmedia * minimum_wage_nom		// using minimum wage data to inpute missing values for year<=1998
 	la var wage_avg "Monthly Wage (R$)"				// generates some noise from original remmedr variable
@@ -660,24 +662,35 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	// occupation dummies
 	//-------------------------//
 	
+	cap ren ocupacao94	CBO1994
+	cap ren ocup2002	CBO2002
+	
 	foreach y in 1994 2002 {
 		cap gen CBO`y' = ""
 		cap replace CBO`y' = subinstr(CBO`y', "CBO", "", .)
-		cap replace CBO`y' = "" if CBO`y' == "000-1"
+		cap replace CBO`y' = "" if CBO`y' == "000-1" | CBO`y' == "IGNORADO"
 		cap replace CBO`y' = trim(CBO`y')
 	}
 	order CBO1994, b(CBO2002)
 	order CBO2002, a(CBO1994)
 	
 	if `year' <= 2002 {
-		merge m:1 CBO1994 using "tmp/CBO1994_dummies.dta"
+		merge m:1 CBO1994 using "tmp/CBO1994_dummies.dta", keep(1 3) nogenerate
 	}
 	else {
-		merge m:1 CBO2002 using "tmp/CBO2002_dummies.dta"
+		merge m:1 CBO2002 using "tmp/CBO2002_dummies.dta", keep(1 3) nogenerate
 	}
 	
-	drop if _merge == 2
-	drop _merge
+	
+	//save "tmp/`year'_job_`k'.dta", replace
+	
+	//}
+	
+	
+	//use "tmp/`year'_job_0.dta", clear
+	//foreach k of numlist 1/15 {
+	//	append using "tmp/`year'_job_`k'.dta"
+	//}
 	
 	order `IDs' year
 	
@@ -703,12 +716,9 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	}
 	*
 	
-	ren PIS			id_worker_PIS
-	ren identificad	id_establishment
-	ren radiccnpj	id_firm
-	ren municipio	id_municipality_6
-	
-	cap ren CPF		id_worker_CPF
+	    ren PIS       id_worker_PIS
+	cap ren CPF		  id_worker_CPF
+	    ren municipio id_municipality_6
 	
 	if `year' >= 1985 & `year' <= 2001 local IDs id_worker_PIS				 id_municipality_6
 	if `year' >= 2002 & `year' <= 2018 local IDs id_worker_PIS id_worker_CPF id_municipality_6
@@ -723,6 +733,17 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	if `year' >= 2006 & `year' <= 2018 local vars grinstrucao genero nacionalidad `age_var' numectps nome raca_cor portdefic tpdef
 	
 	keep `IDs' `vars'
+	
+	duplicates drop
+	
+	// cleaning observations that (1) have missing ID info or (2) are duplicates.
+	drop if id_worker_PIS == "0" | id_worker_PIS == "00000000000"
+	duplicates tag id_worker_PIS id_municipality_6, gen(dup)
+	drop if dup > 0
+	drop dup
+	
+	gen year = `year'
+	la var year "Year"
 	
 	if (`year' >= 2002 & `year' <= 2010) {
 		
@@ -766,24 +787,13 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	cap ren tpdefic disability
 	cap la var disability "Disability"
 	
-	duplicates drop
-	
-	// cleaning observations that (1) have missing ID info or (2) are duplicates.
-	drop if id_worker_PIS == "0" | id_worker_PIS == "00000000000"
-	duplicates tag id_worker_PIS id_municipality_6, gen(dup)
-	drop if dup > 0
-	drop dup
-	
-	gen year = `year'
-	la var year "Year"
-	
 	order `IDs' year
 	
 	if "`SAMPLE'" == "TRUE" {
 		save "output/data/identified/normalized_sample`SAMPLE_SIZE'/worker/`year'.dta", replace
 	}
 	else {
-		save "output/data/identified/normalized/workers/`year'.dta", replace
+		save "output/data/identified/normalized/worker/`year'.dta", replace
 	}
 	*
 	
@@ -801,12 +811,9 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	}
 	*
 	
-	ren PIS			id_worker_PIS
 	ren identificad	id_establishment
 	ren radiccnpj	id_firm
 	ren municipio	id_municipality_6
-	
-	cap ren CPF		id_worker_CPF
 	
 	local IDs id_establishment id_firm id_municipality_6
 	
@@ -817,15 +824,6 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	if `year' >= 2006 & `year' <= 2018 local vars tamestab tipoestbl  	    	natjuridica clascnae20	// indceivinc ceivinc
 	
 	keep `IDs' `vars'
-	
-	cap ren tamestab size
-	cap la var size "Establishment Size"
-	
-	cap ren tipoestbl type
-	cap la var type "Establishment Type"
-	
-	cap ren natjuridica legal_nature
-	cap la var legal_nature "Legal Nature"
 	
 	duplicates drop
 	
@@ -838,21 +836,34 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	gen year = `year'
 	la var year "Year"
 	
+	cap ren tamestab size
+	cap la var size "Establishment Size"
+	
+	cap ren tipoestbl type
+	cap la var type "Establishment Type"
+	
+	cap ren natjuridica legal_nature
+	cap la var legal_nature "Legal Nature"
+	
+	//-------------------------//
+	// establishment's sector
+	//-------------------------//
+	
+	cap ren clascnae95 CNAE1	// years 1995-2005
+	cap ren clascnae20 CNAE2	// years 2006+
+	foreach y in 1 2 {
+		cap gen CNAE`y' = ""
+		cap replace CNAE`y' = subinstr(CNAE`y', "CLASSE ", "", .)
+		cap replace CNAE`y' = trim(CNAE`y')
+	}
+	order CNAE1, b(CNAE2)
+	order CNAE2, a(CNAE1)
+	
+	estab_sector `year'
+		
+	order sector_IBGE sector, a(CNAE2)
+	
 	if `year' >= 1995 {
-		
-		//-------------------------//
-		// establishment's sector
-		//-------------------------//
-		
-		cap ren clascnae95 CNAE1	// years 1995-2005
-		cap la var CNAE1 "CNAE 1.0"
-		
-		cap ren clascnae20 CNAE2	// years 2006+
-		cap la var CNAE2 "CNAE 2.0"
-		
-		estab_sector `year'
-		
-		order sector_IBGE sector, a(CNAE)
 		
 		//-------------------------//
 		// types of establishment
@@ -910,6 +921,7 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 }
 *
 
+/*
 //----------------------------------------------------------------------------//
 // reconstructs CPF backwards (for before 2003)
 //----------------------------------------------------------------------------//
@@ -934,6 +946,8 @@ foreach year of numlist 2004(1)`LAST_YEAR' {
 }
 *
 
+keep if id_worker_CPF != ""
+
 duplicates drop
 duplicates tag id_worker_PIS, gen(dup_PIS)
 duplicates tag id_worker_CPF, gen(dup_CPF)
@@ -942,20 +956,24 @@ drop dup_*
 
 save "tmp/mapping_PIS_CPF.dta", replace
 
+//foreach year of numlist 2003(1)`LAST_YEAR' {
+//	erase "tmp/mapping_PIS_CPF_`year'.dta"
+//}
+*/
 //---------------------------------//
 // add/replace CPF into yearly data
 //---------------------------------//
 
-foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
+foreach year of numlist `FIRST_YEAR'(1)2002 {
 	
 	foreach k in job worker {
 		
 		if "`SAMPLE'" == "TRUE"	 use "output/data/identified/normalized_sample`SAMPLE_SIZE'/`k'/`year'.dta", clear
 		if "`SAMPLE'" == "FALSE" use "output/data/identified/normalized/`k'/`year'.dta", clear
 		
-		if `year' >= 2002 drop id_worker_CPF
+		cap drop id_worker_CPF
 		
-		merge m:1 id_worker_PIS using "tmp/mapping_PIS_CPF.dta"
+		merge m:1 id_worker_PIS using "tmp/mapping_PIS_CPF.dta", keep(1 3)
 		drop if _merge == 2
 		drop _merge
 

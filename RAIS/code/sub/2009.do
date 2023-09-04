@@ -170,10 +170,6 @@ foreach state in `states' {
 	drop mesdesli
 	ren nmesdesli mesdesli
 	
-	replace ocupacao94 = subinstr(ocupacao94, "CBO", "", .)
-	replace ocupacao94="" if ocupacao94=="000-1"
-	destring ocupacao94, replace force
-	
 	destring tipoadm, replace force
 	recode tipoadm	(1 = 1 "PRIM EMPREGO") (2 = 2 "REEMPREGO") (3 = 3 "TRANSF C/ONUS") ///
 					(4 = 4 "TRANSF S/ONUS") (5 = 5 "OUTROS") (6 = 6 "REINTEGRACAO") ///
@@ -474,17 +470,18 @@ foreach state in `states' {
 		clascnae95 clascnae20 sbclas20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
 	
-	tempfile f`state'
-	save `f`state''
+	//tempfile f`state'
+	//save `f`state''
+	save "tmp/2009_`state'.dta", replace
 
 }
 *
 
 local first : word 1 of `states'
-use `f`first'', clear
+use "tmp/2009_`first'.dta", clear
 foreach state in `states' {
 	if "`state'" != "`first'" {
-		qui append using `f`state'', force
+		qui append using "tmp/2009_`state'.dta", force
 	}
 }
 *
@@ -492,5 +489,9 @@ foreach state in `states' {
 compress
 
 save "output/data/identified/full/2009.dta", replace
+
+foreach state in `states' {
+	erase "tmp/2009_`state'.dta"
+}
 
 log close

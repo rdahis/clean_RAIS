@@ -7,7 +7,8 @@ clear all
 cap log close
 set more off
 
-!mkdir "output/data/collapsed"
+cd "/kellogg/data/RAIS"
+
 
 //----------------------------------------------------------------------------//
 // collapse: municipality level
