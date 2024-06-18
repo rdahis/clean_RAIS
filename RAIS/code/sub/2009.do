@@ -14,16 +14,16 @@ local states AC AL AM AP BA CE DF ES GO MA MG MS MT PA PB PE PI PR RJ RN RO RR R
 foreach state in `states' {
 	
 	if "`state'" == "SP1" {
-		import delimited "input/2009/SP2009ID1.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
+		import delimited "input/2009/SP2009ID1.TXT", clear varn(1) delim(";") case(preserve) stringcols(_all)
 	}
 	else if "`state'" == "SP2" {
-		import delimited "input/2009/SP2009ID2.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
+		import delimited "input/2009/SP2009ID2.TXT", clear varn(1) delim(";") case(preserve) stringcols(_all)
 	}
 	else if "`state'" == "GO" {
-		import delimited "input/2009/GO2009ID2.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
+		import delimited "input/2009/GO2009ID2.TXT", clear varn(1) delim(";") case(preserve) stringcols(_all)
 	}
 	else {
-		import delimited "input/2009/`state'2009ID.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
+		import delimited "input/2009/`state'2009ID.TXT", clear varn(1) delim(";") case(preserve) stringcols(_all)
 	}
 	*
 	
