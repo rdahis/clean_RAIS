@@ -394,9 +394,7 @@ foreach state in `states' {
 	la var empem3112		"Indicador de vinculo ativo em 31/12 (1 - sim; 0 - nao)"
 	la var tpvinculo		"Tipo de vinculo empregaticio"
 	la var causadesli		"Causa do desligamento"
-	//la var diadeslig		"Dia de desligamento do trabalhador"
 	la var mesdesli			"Mes de desligamento do trabalhador"
-	//la var ocupacao94		"CBO (Classificacao Brasileira de Ocupacoes), criada em 1994"
 	la var ocup2002			"CBO (Classificacao Brasileira de Ocupacoes), criada em 2002 (6 digitos)"
 	la var grinstrucao		"Grau de instrucao"
 	la var genero			"Genero"
@@ -415,7 +413,6 @@ foreach state in `states' {
 	la var tempempr			"Tempo de emprego do trabalhador em meses (quando acumulada, representa a soma dos meses)"
 	la var PIS				"Numero de inscricao do empregado no Cadastro PIS/PASEP"
 	la var CPF				"CPF do trabalhador"
-	//la var dtnascimento		"Data de nascimento do trabalhador"
 	la var idade			"Idade"
 	la var numectps			"Numero CTPS do trabalhador"
 	la var identificad		"CNPJ ou CEI do estabelecimento (sem zeros a esquerda)"
@@ -454,10 +451,7 @@ foreach state in `states' {
 		remdezembro remdezr remmedia remmedr tempempr tiposal salcontr ultrem horascontr ///
 		sbclas20 clascnae95 clascnae20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
-	// ocupacao94 diadeslig dtnascimento
-	
-	//tempfile f`state'
-	//save `f`state''
+
 	save "tmp/2011_`state'.dta", replace
 
 }

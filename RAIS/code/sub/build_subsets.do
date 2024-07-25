@@ -5,9 +5,6 @@
 
 clear all
 cap log close
-set more off
-
-cd "F://data/rais"
 
 local SAMPLE		FALSE
 local SAMPLE_SIZE	5
@@ -19,7 +16,7 @@ if "`SAMPLE'" == "TRUE" {
 *
 
 local FIRST_YEAR 1985
-local LAST_YEAR  2018
+local LAST_YEAR  2020
 
 local SECOND_YEAR = `FIRST_YEAR' + 1
 
@@ -86,7 +83,7 @@ program estab_sector
 		drop sector1
 		
 	}
-	else if `year' >= 2006 & `year' <= 2018 {
+	else if `year' >= 2006 {
 		
 		gen     sector2 = ""
 		replace sector2 = "A" if inlist(substr(CNAE2, 1, 2), "01", "02", "03")
@@ -300,165 +297,106 @@ la var WC_technician   "White Collar Technician"
 la var WC_others       "White Collar Others"
 la var BC              "Blue Collar"
 
-/*
-gen     occup_cat = .
-replace occup_cat = 0                           if length(CBO2002) == 5
-replace occup_cat = real(substr(CBO2002, 1, 1)) if length(CBO2002) == 6
-la var occup_cat "Occupation Category (CBO2002)"
-
-order occup_cat, a(ISCO1988)
-
-la define la_occup_cat	0 "military or police" ///
-						1 "manager or upper politician" ///
-						2 "professional: science and arts" ///
-						3 "technician: mid-level" ///
-						4 "worker: clerical" ///
-						5 "worker: services or sales" ///
-						6 "worker: agriculture, forestry or fishing" ///
-						7 "worker: industry" ///
-						8 "worker: industry" ///
-						9 "worker: repair or maintenance", ///
-	replace
-
-la val occup_cat la_occup_cat
-*/
-
 save "tmp/CBO2002_dummies.dta", replace
-
-/*
-
-//------------------------------//
-// mapping CBO1994 and CBO2002 to ISCO1988
-//------------------------------//
-
-use "tmp/CBO1994_to_ISCO1988.dta", clear
-
-/*
-gen occup_gener =	inlist(substr(CBO1994, -2, .), "01", "02", "03", "04", "05") | /// // Note: this is unrelated to French Anatomy classification, and independent, but could be useful
-					inlist(substr(CBO1994, -2, .), "06", "07", "08", "09", "10")
-la var occup_gener "Generalist (CBO 1994)"
-
-gen occup_WC = inlist(substr(ISCO1988, 1, 1), "2", "3", "4", "5")
-la var occup_WC "White Collar (ISCO 1988)"
-
-gen occup_WC_superv = (inlist(substr(ISCO1988, 1, 1), "2", "3") & occup_gener == 1)
-la var occup_WC_superv "White Collar Supervisor (ISCO 1988)"
-
-gen occup_WC_notsuperv = inlist(substr(ISCO1988, 1, 1), "4", "5")
-replace occup_WC_notsuperv = 1 if inlist(substr(ISCO1988, 1, 1), "2", "3") & occup_gener == 0
-la var occup_WC_notsuperv "White Collar Supervisor (ISCO 1988)"
-
-gen occup_WC_top = inlist(substr(ISCO1988, 1, 1), "2", "3")
-la var occup_WC_top "White Collar Top (ISCO 1988)"
-
-gen occup_WC_others = inlist(substr(ISCO1988, 1, 1), "4", "5")
-la var occup_WC_others "White Collar Others (ISCO 1988)"
-
-gen occup_man = inlist(substr(ISCO1988, 2, 4), "121", "122", "123", "131")	// Note: ISCO88 makes distinction between Corporate Manager (121-122-123) and General Manager (131).
-la var occup_man "Manager (ISCO 1988)"										// However, it's a distinction that is not clear about layer, but rather about firm size. 
-																			// Therefore consider them equal for this.
-
-gen occup_BC = inlist(substr(ISCO1988, 1, 1), "6", "7", "8", "9")
-replace occup_BC = 1 if occup_WC_superv == 0 & occup_WC_notsuperv == 0 & occup_WC_top == 0 & occup_WC_others == 0 & occup_WC == 0 & occup_BC == 0 & occup_man == 0
-la var occup_BC "Blue Collar (ISCO 1988)"
-*/
-
-merge 1:m CBO1994 using "tmp/CBO1994_to_CBO2002.dta"
-drop if _merge == 2
-drop _merge
-
-foreach k in occup_gener occup_BC occup_WC occup_WC_superv occup_WC_notsuperv occup_WC_top occup_WC_others occup_man {
-	
-	local lab: variable label `k'
-	
-	ren `k' `k'_1994
-	
-	gen `k' = `k'_1994
-	la var `k' "`lab'"
-	
-	bys CBO2002: egen aux_`k' = max(`k') if CBO2002 != ""
-	
-}
-*
-
-replace occup_gener = 1			if aux_occup_gener == 1
-replace occup_BC = 0			if aux_occup_man == 1 | aux_occup_WC_superv == 1 | aux_occup_WC_notsuperv == 1 | aux_occup_WC_top == 1 | aux_occup_WC_others == 1 | aux_occup_WC == 1
-replace occup_BC = 0			if aux_occup_man == 1 | aux_occup_WC_superv == 1 | aux_occup_WC_notsuperv == 1 | aux_occup_WC_top == 1 | aux_occup_WC_others == 1
-replace occup_WC = 0			if aux_occup_man == 1 
-replace occup_WC_others = 0		if aux_occup_man == 1 | aux_occup_WC_top == 1
-replace occup_WC_top = 0		if aux_occup_man == 1 
-replace occup_WC_notsuperv = 0	if aux_occup_man == 1 | aux_occup_WC_superv == 1
-replace occup_WC_superv = 0		if aux_occup_man == 1
-replace occup_man = 1			if aux_occup_man == 1
-
-replace occup_BC = 1 if occup_WC_superv == 0 & occup_WC_notsuperv == 0 & occup_WC_top == 0 & occup_WC_others == 0 & occup_WC == 0 & occup_BC == 0 & occup_man == 0
-
-drop aux*
-
-preserve
-	
-	keep CBO1994 occup_gener_1994 - occup_BC_1994
-	
-	foreach k in occup_gener occup_WC occup_WC_superv occup_WC_notsuperv occup_WC_top occup_WC_others occup_man occup_BC {
-		
-		ren `k'_1994 `k'
-		
-	}
-	*
-	
-	drop if CBO1994 == ""
-	duplicates drop
-	
-	save "tmp/CBO1994_categories.dta", replace
-	
-restore
-
-preserve
-	
-	keep CBO2002 occup_gener - occup_man
-	
-	drop if CBO2002 == ""
-	duplicates drop
-	
-	duplicates drop CBO2002, force	// TODO: there should be no duplicates at this stage!
-	
-	save "tmp/CBO2002_categories.dta", replace
-	
-restore
-*/
 
 //------------------------------//
 // minimum wage
+// source: http://www.ipeadata.gov.br/Default.aspx > 'Salário mínimo vigente (MTE12_SALMIN12)'
 //------------------------------//
 
-use "extra/minimum_wage/data_minimum_wage_1940-2019.dta", clear
+import excel "extra/minimum_wage/ipeadata[25-07-2024-01-55].xls", clear
+
+drop in 1
+
+gen year = real(substr(A, 1, 4))
+la var year "Year"
+
+gen month = real(substr(A, 6, 2))
+la var month "Month"
+
+gen ym = date(A, "YM")
+format ym %td
+la var ym "Year-Month"
+
+drop A
+ren  B minimum_wage_nom
+
+la var minimum_wage_nom "Nominal Minimum Wage"
+
+destring, replace
 
 keep if month == 12
 drop month ym
 
 save "tmp/minimum_wage.dta", replace
 
-
 //------------------------------//
 // inflation
+// source: https://www.ibge.gov.br/estatisticas/economicas/precos-e-custos/9256-indice-nacional-de-precos-ao-consumidor-amplo.html?=&t=downloads > 'Serie_Historica'
 //------------------------------//
 
-use "extra/inflation/data_IBGE_IPCA_1994-2018.dta", clear
+import excel "extra/inflation/ipca_202406SerieHist.xls", clear allstring
+
+ren A year
+ren B month
+ren C index
+ren D inflation_month
+ren E inflation_3month
+ren F inflation_6month
+ren G inflation_year
+ren H inflation_12month
+
+keep year month index inflation_*
+
+replace year = year[_n-1] if year[_n-1] != "" & (inlist(month, "JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO") | inlist(month, "SET", "OUT", "NOV", "DEZ"))
+
+destring year index inflation*, replace force
+
+gen aux = .
+replace aux = 1 if month == "JAN"
+replace aux = 2 if month == "FEV"
+replace aux = 3 if month == "MAR"
+replace aux = 4 if month == "ABR"
+replace aux = 5 if month == "MAI"
+replace aux = 6 if month == "JUN"
+replace aux = 7 if month == "JUL"
+replace aux = 8 if month == "AGO"
+replace aux = 9 if month == "SET"
+replace aux = 10 if month == "OUT"
+replace aux = 11 if month == "NOV"
+replace aux = 12 if month == "DEZ"
+drop month
+ren aux month
+order month, a(year)
+
+gen ym = ym(year, month)
+format %tm ym
+order ym, a(month)
+la var ym "Year-Month"
+
+la var year					"Year"
+la var month				"Month"
+la var index				"Index (1993 December as 100)"
+la var inflation_month		"% Inflation Monthly"
+la var inflation_3month		"% Inflation 3-Monthly"
+la var inflation_6month		"% Inflation 6-Monthly"
+la var inflation_year		"% Inflation Yearly"
+la var inflation_12month	"% Inflation 12-Monthly"
+
+drop if year == .
 
 keep if month == 12
-
 keep year index
 
-gen aux_index_2018 = index if year == 2018
-egen index_2018 = max(aux_index_2018)
+gen aux_index = index if year == 2020
+egen index_2020 = max(aux_index)
 
-gen price_index_b2018 = index / index_2018
-la var price_index_b2018 "Price Index (Base 2018)"
+gen price_index_b2020 = index / index_2020
+la var price_index_b2020 "Price Index (Base 2020)"
 
-keep year price_index_b2018
+keep year price_index_b2020
 
 save "tmp/inflation.dta", replace
-
 
 //----------------------------------------------------------------------------//
 // subsets
@@ -493,17 +431,17 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	    ren municipio	id_municipality_6
 	
 	if `year' >= 1985 & `year' <= 2001 local IDs id_worker_PIS    			 id_establishment id_municipality_6
-	if `year' >= 2002 & `year' <= 2018 local IDs id_worker_PIS id_worker_CPF id_establishment id_municipality_6
+	if `year' >= 2002                  local IDs id_worker_PIS id_worker_CPF id_establishment id_municipality_6
 	
-	if `year' >= 1994 & `year' <= 2018 & `year' != 2002	local tipoadm tipoadm
-	if `year' == 2002									local tipoadm
+	if `year' >= 1994 & `year' != 2002 local tipoadm tipoadm
+	if `year' == 2002				   local tipoadm
 	
 	if `year' >= 1985 & `year' <= 1993 local vars empem3112 tpvinculo			mesadmissao causadesli mesdesli ocupacao94			remdezembro remmedia				 tempempr
 	if `year' >= 1994 & `year' <= 1998 local vars empem3112 tpvinculo `tipoadm' mesadmissao causadesli mesdesli ocupacao94			remdezembro remmedia				 tempempr horascontr
 	if `year' >= 1999 & `year' <= 2001 local vars empem3112 tpvinculo `tipoadm' mesadmissao causadesli mesdesli ocupacao94			remdezembro remmedia remdezr remmedr tempempr horascontr
 	if `year' == 2002				   local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli ocupacao94			remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
 	if `year' >= 2003 & `year' <= 2009 local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli ocupacao94 ocup2002 remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
-	if `year' >= 2010 & `year' <= 2018 local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli            ocup2002 remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
+	if `year' >= 2010                  local vars empem3112 tpvinculo `tipoadm' dtadmissao  causadesli mesdesli            ocup2002 remdezembro remmedia remdezr remmedr tempempr horascontr tiposal salcontr ultrem
 	
 	keep `IDs' `vars'
 	
@@ -617,17 +555,10 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	cap drop mesadmissao
 	cap drop mesdesli
 	
-	
-	//save "tmp/`year'_job.dta", replace
-	
 	//-------------------------//
 	// wage variables
 	//-------------------------//
 	
-	//foreach k of numlist 0/15 {
-		
-	//	use "tmp/`year'_job.dta" if type_admission == `k', clear
-		
 	merge m:1 year using "tmp/minimum_wage.dta", keep(1 3) nogenerate
 	merge m:1 year using "tmp/inflation.dta",    keep(1 3) nogenerate
 	
@@ -642,21 +573,21 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	
 	if `year' >= 1994 {
 		
-		gen wage_avg_def = wage_avg / price_index_b2018
-		la var wage_avg_def "Monthly Wage (R$ 2018)"
+		gen wage_avg_def = wage_avg / price_index_b2020
+		la var wage_avg_def "Monthly Wage (R$ 2020)"
 		
-		gen wage_dec_def = wage_dec / price_index_b2018
-		la var wage_dec_def "December Wage (R$ 2018)"
+		gen wage_dec_def = wage_dec / price_index_b2020
+		la var wage_dec_def "December Wage (R$ 2020)"
 		
-		gen wage_total_def = wage_total / price_index_b2018
-		la var wage_total_def "Total Yearly Wage (R$ 2018)"
+		gen wage_total_def = wage_total / price_index_b2020
+		la var wage_total_def "Total Yearly Wage (R$ 2020)"
 		
 	}
 	*
 	
 	cap drop remdezembro remmedia
 	cap drop remdezr remmedr 
-	drop minimum_wage_* price_index_b2018
+	drop minimum_wage* price_index_b2020
 	
 	//-------------------------//
 	// occupation dummies
@@ -680,17 +611,6 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	else {
 		merge m:1 CBO2002 using "tmp/CBO2002_dummies.dta", keep(1 3) nogenerate
 	}
-	
-	
-	//save "tmp/`year'_job_`k'.dta", replace
-	
-	//}
-	
-	
-	//use "tmp/`year'_job_0.dta", clear
-	//foreach k of numlist 1/15 {
-	//	append using "tmp/`year'_job_`k'.dta"
-	//}
 	
 	order `IDs' year
 	
@@ -721,16 +641,17 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	    ren municipio id_municipality_6
 	
 	if `year' >= 1985 & `year' <= 2001 local IDs id_worker_PIS				 id_municipality_6
-	if `year' >= 2002 & `year' <= 2018 local IDs id_worker_PIS id_worker_CPF id_municipality_6
+	if `year' >= 2002                  local IDs id_worker_PIS id_worker_CPF id_municipality_6
 	
-	if (`year' >= 1994 & `year' <= 2001) | (`year' >= 2011 & `year' <= 2018)	local age_var idade
-	if (`year' >= 2002 & `year' <= 2010)										local age_var dtnascimento
+	if `year' >= 1994 & `year' <= 2001 local age_var idade
+	if `year' >= 2002 & `year' <= 2010 local age_var dtnascimento
+	if `year' >= 2011                  local age_var idade
 	
 	if `year' >= 1985 & `year' <= 1993 local vars grinstrucao genero nacionalidad
 	if `year' >= 1994 & `year' <= 2001 local vars grinstrucao genero nacionalidad `age_var'
 	if `year' >= 2002 & `year' <= 2002 local vars grinstrucao genero nacionalidad `age_var' numectps nome
 	if `year' >= 2003 & `year' <= 2005 local vars grinstrucao genero nacionalidad `age_var' numectps nome raca_cor portdefic
-	if `year' >= 2006 & `year' <= 2018 local vars grinstrucao genero nacionalidad `age_var' numectps nome raca_cor portdefic tpdef
+	if `year' >= 2006                  local vars grinstrucao genero nacionalidad `age_var' numectps nome raca_cor portdefic tpdef
 	
 	keep `IDs' `vars'
 	
@@ -821,7 +742,7 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	if `year' >= 1995 & `year' <= 1998 local vars tamestab tipoestbl clascnae95 natjuridica				// ATTENTION: dropping variables which vary within id_establishment-year level. [generating duplicates]
 	if `year' >= 1999 & `year' <= 2002 local vars tamestab tipoestbl clascnae95 natjuridica				// indceivinc ceivinc
 	if `year' >= 2003 & `year' <= 2005 local vars tamestab tipoestbl clascnae95 natjuridica				// indceivinc ceivinc ocup2002
-	if `year' >= 2006 & `year' <= 2018 local vars tamestab tipoestbl  	    	natjuridica clascnae20	// indceivinc ceivinc
+	if `year' >= 2006                  local vars tamestab tipoestbl  	    	natjuridica clascnae20	// indceivinc ceivinc
 	
 	keep `IDs' `vars'
 	
@@ -921,7 +842,6 @@ foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 }
 *
 
-/*
 //----------------------------------------------------------------------------//
 // reconstructs CPF backwards (for before 2003)
 //----------------------------------------------------------------------------//
@@ -956,10 +876,10 @@ drop dup_*
 
 save "tmp/mapping_PIS_CPF.dta", replace
 
-//foreach year of numlist 2003(1)`LAST_YEAR' {
-//	erase "tmp/mapping_PIS_CPF_`year'.dta"
-//}
-*/
+foreach year of numlist 2003(1)`LAST_YEAR' {
+	erase "tmp/mapping_PIS_CPF_`year'.dta"
+}
+
 //---------------------------------//
 // add/replace CPF into yearly data
 //---------------------------------//
@@ -986,7 +906,6 @@ foreach year of numlist `FIRST_YEAR'(1)2002 {
 }
 *
 
-/*
 //----------------------------------------------------------------------------//
 // appends and save
 //----------------------------------------------------------------------------//
@@ -1016,4 +935,4 @@ if "`SAMPLE'" == "TRUE" {
 		
 	}
 }
-*/
+*

@@ -490,10 +490,7 @@ foreach state in `states' {
 		remdezembro remdezr remmedia remmedr tempempr tiposal salcontr ultrem horascontr indceivinc ceivinc ///
 		sbclas20 clascnae95 clascnae20 tamestab natjuridica tipoestbl ///
 		indalvara indpat indsimples
-	// ocupacao94  
-	
-	//tempfile f`state'
-	//save `f`state''
+
 	save "tmp/2016_`state'.dta", replace
 
 }

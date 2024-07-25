@@ -12,12 +12,13 @@ cd "F://data/rais"
 !mkdir "output/data/identified"
 !mkdir "output/data/identified/full"
 !mkdir "output/data/identified/normalized"
+!mkdir "output/data/collapsed"
 
 //----------------------------------------------------------------------------//
 // build
 //----------------------------------------------------------------------------//
 
-foreach year of numlist 1985(1)2018 {
+foreach year of numlist 1985(1)2020 {
 	do "code/sub/`year'.do"
 }
 

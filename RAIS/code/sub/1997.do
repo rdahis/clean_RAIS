@@ -297,8 +297,6 @@ foreach state in `states' {
 		remdezembro remmedia tempempr ///
 		clascnae95 tamestab tipoestbl natjuridica ibgesubsetor
 	
-	//tempfile f`state'
-	//save `f`state''
 	save "tmp/1997_`state'.dta", replace
 
 }

@@ -469,8 +469,6 @@ foreach state in `states' {
 		clascnae95 clascnae20 sbclas20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
 	
-	//tempfile f`state'
-	//save `f`state''
 	save "tmp/2008_`state'.dta", replace
 
 }

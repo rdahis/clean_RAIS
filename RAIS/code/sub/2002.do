@@ -330,8 +330,6 @@ foreach state in `states' {
 		remdezembro remmedia remdezr remmedr tempempr ///
 		clascnae95 tamestab tipoestbl natjuridica
 	
-	//tempfile f`state'
-	//save `f`state''
 	save "tmp/2002_`state'.dta", replace
 
 }

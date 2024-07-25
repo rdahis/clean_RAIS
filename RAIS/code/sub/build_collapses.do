@@ -7,20 +7,26 @@ clear all
 cap log close
 set more off
 
-cd "/kellogg/data/RAIS"
+cd "F://data/rais"
 
+local SAMPLE FALSE
+
+local FIRST_YEAR 1985
+local LAST_YEAR  2020
+
+local SECOND_YEAR = `FIRST_YEAR' + 1
 
 //----------------------------------------------------------------------------//
 // collapse: municipality level
 //----------------------------------------------------------------------------//
 
-foreach year of numlist 1995(1)2018 {
+foreach year of numlist 1995(1)`LAST_YEAR' {
 	
 	//-----------------------//
 	// jobs
 	//-----------------------//
 	
-	use "output/data/normalized/worker_estab_munic/RAIS_`year'_normalized_worker_estab_munic.dta", clear
+	use "output/data/normalized/job/`year'.dta", clear
 	
 	ren wage_total_def wage
 	
@@ -35,7 +41,7 @@ foreach year of numlist 1995(1)2018 {
 	}
 	else {
 		
-		merge m:1 id_estab id_munic_6 using "output/data/normalized/estab_munic/RAIS_`year'_normalized_estab_munic.dta"
+		merge m:1 id_estab id_munic_6 using "output/data/normalized/establishment/`year'.dta"
 		drop if _merge == 2
 		drop _merge
 		
@@ -133,11 +139,11 @@ foreach year of numlist 1995(1)2018 {
 	// job categories
 	//-----------------------//
 	
-	use "output/data/normalized/worker_estab_munic/RAIS_`year'_normalized_worker_estab_munic.dta", clear
+	use "output/data/normalized/job/`year'.dta", clear
 	
 	ren wage_total_def wage
 	
-	merge m:1 id_estab id_munic_6 using "output/data/normalized/estab_munic/RAIS_`year'_normalized_estab_munic.dta"
+	merge m:1 id_estab id_munic_6 using "output/data/normalized/establishment/`year'.dta"
 	drop if _merge == 2
 	drop _merge
 	
@@ -162,7 +168,7 @@ foreach year of numlist 1995(1)2018 {
 	
 	collapse (sum) n_jobs wage, by(id_munic_6 CBO public public_federal public_state public_municipal public_exec public_leg public_jud company nonprofit)
 	
-	gen x = ""
+	gen     x = ""
 	replace x = "pub_fed_exec"	if public_federal == 1		& public_exec == 1
 	replace x = "pub_fed_leg"	if public_federal == 1		& public_leg == 1
 	replace x = "pub_fed_jud"	if public_federal == 1		& public_jud == 1
@@ -248,11 +254,11 @@ foreach year of numlist 1995(1)2018 {
 	// jobs by sector
 	//-----------------------//
 	
-	use "output/data/normalized/worker_estab_munic/RAIS_`year'_normalized_worker_estab_munic.dta", clear
+	use "output/data/normalized/job/`year'.dta", clear
 	
 	ren wage_total_def wage
 	
-	merge m:1 id_estab id_munic_6 using "output/data/normalized/estab_munic/RAIS_`year'_normalized_estab_munic.dta"
+	merge m:1 id_estab id_munic_6 using "output/data/normalized/establishment/`year'.dta"
 	drop if _merge == 2
 	drop _merge
 	
@@ -305,7 +311,7 @@ foreach year of numlist 1995(1)2018 {
 	// establishments
 	//-----------------------//
 	
-	use "output/data/normalized/estab_munic/RAIS_`year'_normalized_estab_munic.dta", clear
+	use "output/data/normalized/establishment/`year'.dta", clear
 	
 	gen n_estab				= 1
 	gen n_estab_agric		= (sector == 1)
@@ -362,7 +368,7 @@ foreach year of numlist 1995(1)2018 {
 //---------------------------------//
 
 use "tmp/munic_1995.dta", clear
-foreach year of numlist 1996(1)2018 {
+foreach year of numlist 1996(1)`LAST_YEAR' {
 	append using "tmp/munic_`year'.dta"
 }
 *
@@ -372,8 +378,7 @@ sort  id_munic_6 year
 
 compress
 
-save "output/data/collapsed/RAIS_1995-2018_collapsed_munic.dta", replace
-
+save "output/data/collapsed/RAIS_1995-`LAST_YEAR'_collapsed_municipality.dta", replace
 
 
 //----------------------------------------------------------------------------//
@@ -382,9 +387,9 @@ save "output/data/collapsed/RAIS_1995-2018_collapsed_munic.dta", replace
 
 if "`SAMPLE'" == "FALSE" {
 	
-	foreach year of numlist 1985(1)2018 {
+	foreach year of numlist 1985(1)`LAST_YEAR' {
 		
-		use "output/data/normalized/worker_estab_munic/RAIS_`year'_normalized_worker_estab_munic.dta", clear
+		use "output/data/normalized/job/`year'.dta", clear
 		
 		gen n_workers = 1
 		
@@ -434,25 +439,25 @@ if "`SAMPLE'" == "FALSE" {
 	*
 	
 	use "output/data/collapsed/RAIS_1985_collapsed_estab.dta", clear
-	foreach year of numlist 1986(1)2018 {
+	foreach year of numlist 1986(1)`LAST_YEAR' {
 		append using "output/data/collapsed/RAIS_`year'_collapsed_estab.dta"
 	}
 	*
 	
-	save "output/data/collapsed/RAIS_1985-2018_collapsed_estab.dta", replace
+	save "output/data/collapsed/RAIS_1985-`LAST_YEAR'_collapsed_establishment.dta", replace
 	
 }
 *
 
 //----------------------------------------------------------------------------//
-// collapse: establishment-munic-year level
+// collapse: establishment-municipality-year level
 //----------------------------------------------------------------------------//
 
 if "`SAMPLE'" == "FALSE" {
 	
-	foreach year of numlist 1985(1)2018 {
+	foreach year of numlist 1985(1)`LAST_YEAR' {
 		
-		use "output/data/normalized/worker_estab_munic/RAIS_`year'_normalized_worker_estab_munic.dta", clear
+		use "output/data/normalized/job/`year'.dta", clear
 		
 		gen n_workers = 1
 		
@@ -496,20 +501,18 @@ if "`SAMPLE'" == "FALSE" {
 		
 		compress
 		
-		save "output/data/collapsed/RAIS_`year'_collapsed_estab_munic.dta", replace
+		save "output/data/collapsed/RAIS_`year'_collapsed_establishment.dta", replace
 	
 	}
 	*
 	
-	use "output/data/collapsed/RAIS_1985_collapsed_estab_munic.dta", clear
-	foreach year of numlist 1986(1)2018 {
-		append using "output/data/collapsed/RAIS_`year'_collapsed_estab_munic.dta"
+	use "output/data/collapsed/RAIS_1985_collapsed_establishment.dta", clear
+	foreach year of numlist 1986(1)`LAST_YEAR' {
+		append using "output/data/collapsed/RAIS_`year'_collapsed_establishment.dta"
 	}
 	*
 	
-	save "output/data/collapsed/RAIS_1985-2018_collapsed_estab_munic.dta", replace
+	save "output/data/collapsed/RAIS_1985-`LAST_YEAR'_collapsed_establishment.dta", replace
 	
 }
 *
-
-

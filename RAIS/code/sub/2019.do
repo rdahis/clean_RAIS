@@ -7,13 +7,13 @@ clear all
 cap log close
 set more off
 
-log using "output/log/2018.log", replace
+log using "output/log/2019.log", replace
 
 local states CENTRO_OESTE NORTE NORDESTE MG_ES_RJ SP SUL
 
 foreach state in `states' {
 	
-	import delimited "input/2018/RAIS_VINC_ID_`state'.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
+	import delimited "input/2019/RAIS_VINC_ID_`state'.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
 	
 	ren Município				municipio
 	ren CNAE95Classe			clascnae95
@@ -490,29 +490,26 @@ foreach state in `states' {
 		sbclas20 clascnae95 clascnae20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
 	
-	save "tmp/2018_`state'.dta", replace
+	save "tmp/2019_`state'.dta", replace
 
 }
 *
 
 local first : word 1 of `states'
-use "tmp/2018_`first'.dta", clear
+use "tmp/2019_`first'.dta", clear
 foreach state in `states' {
 	if "`state'" != "`first'" {
-		qui append using "tmp/2018_`state'.dta", force
+		qui append using "tmp/2019_`state'.dta", force
 	}
 }
 *
 
 compress
 
-save "output/data/identified/full/2018.dta", replace
+save "output/data/identified/full/2019.dta", replace
 
 foreach state in `states' {
-	erase "tmp/2018_`state'.dta"
+	erase "tmp/2019_`state'.dta"
 }
 
 log close
-
-
-

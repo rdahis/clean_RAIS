@@ -7,13 +7,13 @@ clear all
 cap log close
 set more off
 
-log using "output/log/2018.log", replace
+log using "output/log/2020.log", replace
 
 local states CENTRO_OESTE NORTE NORDESTE MG_ES_RJ SP SUL
 
 foreach state in `states' {
 	
-	import delimited "input/2018/RAIS_VINC_ID_`state'.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
+	import delimited "input/2020/RAIS_VINC_ID_`state'.txt", clear varn(1) delim(";") case(preserve) stringcols(_all)
 	
 	ren Município				municipio
 	ren CNAE95Classe			clascnae95
@@ -81,17 +81,17 @@ foreach state in `states' {
 	ren CEPEstab				cepestab
 	ren MunTrab					muntrab
 	ren RazãoSocial				razaosocial
-	ren VlRemJaneiroCC			remjan
-	ren VlRemFevereiroCC		remfev
-	ren VlRemMarçoCC			remmar
-	ren VlRemAbrilCC			remabr
-	ren VlRemMaioCC				remmai
-	ren VlRemJunhoCC			remjun
-	ren VlRemJulhoCC			remjul
-	ren VlRemAgostoCC			remago
-	ren VlRemSetembroCC			remset
-	ren VlRemOutubroCC			remout
-	ren VlRemNovembroCC			remnov
+	ren VlRemJaneiroSC			remjan
+	ren VlRemFevereiroSC		remfev
+	ren VlRemMarçoSC			remmar
+	ren VlRemAbrilSC			remabr
+	ren VlRemMaioSC				remmai
+	ren VlRemJunhoSC			remjun
+	ren VlRemJulhoSC			remjul
+	ren VlRemAgostoSC			remago
+	ren VlRemSetembroSC			remset
+	ren VlRemOutubroSC			remout
+	ren VlRemNovembroSC			remnov
 	ren AnoChegadaBrasil 		anochegbr
 	
 	cap drop v77
@@ -490,29 +490,26 @@ foreach state in `states' {
 		sbclas20 clascnae95 clascnae20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
 	
-	save "tmp/2018_`state'.dta", replace
+	save "tmp/2020_`state'.dta", replace
 
 }
 *
 
 local first : word 1 of `states'
-use "tmp/2018_`first'.dta", clear
+use "tmp/2020_`first'.dta", clear
 foreach state in `states' {
 	if "`state'" != "`first'" {
-		qui append using "tmp/2018_`state'.dta", force
+		qui append using "tmp/2020_`state'.dta", force
 	}
 }
 *
 
 compress
 
-save "output/data/identified/full/2018.dta", replace
+save "output/data/identified/full/2020.dta", replace
 
 foreach state in `states' {
-	erase "tmp/2018_`state'.dta"
+	erase "tmp/2020_`state'.dta"
 }
 
 log close
-
-
-

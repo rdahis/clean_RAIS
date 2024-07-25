@@ -406,7 +406,6 @@ foreach state in `states' {
 	la var causadesli		"Causa do desligamento"
 	la var diadesli			"Dia de desligamento do trabalhador"
 	la var mesdesli			"Mes de desligamento do trabalhador"
-	//la var ocupacao94		"CBO (Classificacao Brasileira de Ocupacoes), criada em 1994"
 	la var ocup2002			"CBO (Classificacao Brasileira de Ocupacoes), criada em 2002 (6 digitos)"
 	la var grinstrucao		"Grau de instrucao"
 	la var genero			"Genero"
@@ -463,8 +462,6 @@ foreach state in `states' {
 		sbclas20 clascnae95 clascnae20 tamestab natjuridica tipoestbl ///
 		indceivinc ceivinc indalvara indpat indsimples
 	
-	//tempfile f`state'
-	//save `f`state''
 	save "tmp/2014_`state'.dta", replace
 
 }
