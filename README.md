@@ -1,6 +1,6 @@
-# Cleaning the Relação Anual de Informações Sociais (RAIS) dataset in Stata, 1985-2018
+# Cleaning the Relação Anual de Informações Sociais (RAIS) dataset in Stata, 1985-2020
 
-This repository contains Stata code that cleans and normalizes all RAIS for years 1985-2018.
+This repository contains Stata code that cleans and normalizes all RAIS for years 1985-2020.
 
 More information about RAIS, the Brazilian matched employer-employee dataset:
 - [Base dos Dados](http://basedosdados.org/dataset/br-me-rais)
@@ -14,9 +14,7 @@ More information about RAIS, the Brazilian matched employer-employee dataset:
 
 1. Clone or download the repository.
 2. Paste the raw RAIS data files into `/input`.
-3. Run each year's dofile in `/src/sub`. Adjust the directory `path` to your own setup.
-4. Run the dofile `/src/sub/build_subsets.do`.
-5. Run the dofile `/src/sub/build_collapses.do`.
+3. Run the dofile `/code/build.do`.
 
 ## Output
 
@@ -25,7 +23,7 @@ This repository outputs RAIS all cleaned and normalized. It generates three sets
 It provides some cleaning fixes to the original data:
 - It standardizes all variable names and labels.
 - It fixes wage variables with missing values.
-- It generates deflated wage variables, relative to 2018.
+- It generates deflated wage variables, relative to 2020.
 - It allows for sample output data sets, if one prefers to work with smaller files.
 - It standardizes classification variables (CNAE and CBO), and builds IBGE's broad sectors variables.
 - It classifies types of establishments, into public, private, nonprofit, and by sphere/branch of government.
@@ -43,8 +41,8 @@ It provides some cleaning fixes to the original data:
 
 If you benefit from code in this repository, please cite it in your work as:
 
-- Dahis, Ricardo (2020) Cleaning the _Relação Anual de Informações Sociais_ (RAIS) dataset, 1985-2018. Github repository - https://github.com/rdahis/clean_RAIS
+- Dahis, Ricardo (2024) Cleaning the _Relação Anual de Informações Sociais_ (RAIS) dataset, 1985-2020. Github repository - https://github.com/rdahis/clean_RAIS
 
 ## Bugs, Comments and Suggestions
 
-If you find any issues in my code, or have any suggestions for improvements, please open an issue or just email me at [rdahis@econ.puc-rio.br](mailto:rdahis@econ.puc-rio.br).
+If you find any issues in my code, or have any suggestions for improvements, please open an issue or just email me at [ricardo.dahis@monash.edu](mailto:ricardo.dahis@monash.edu).
