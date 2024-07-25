@@ -1,0 +1,196 @@
+CODIGO;TITULO
+010;MEMBROS DAS FORÇAS ARMADAS                                                                                                        
+020;OFICIAIS DE POLÍCIA MILITAR                                                                                                       
+021;PRAÇAS DE POLÍCIA MILITAR                                                                                                         
+030;OFICIAIS DE BOMBEIRO MILITAR                                                                                                      
+031;PRAÇAS DE BOMBEIRO MILITAR                                                                                                        
+111;MEMBROS SUPERIORES DO PODER LEGISLATIVO, EXECUTIVO E JUDICIÁRIO                                                                   
+113;CHEFES DE PEQUENAS POPULAÇÕES                                                                                                     
+114;DIRIGENTES E ADMINISTRADORES DE ORGANIZAÇÃO DE INTERESSE PÚBLICO                                                                  
+121;DIRETORES GERAIS                                                                                                                  
+122;DIRETORES DE PRODUÇÃO E OPERAÇÕES                                                                                                 
+123;DIRETORES DE ÁREAS DE APOIO                                                                                                       
+131;DIRETORES E GERENTES EM EMPRESA DE SERVIÇOS DE SAÚDE, DE EDUCAÇÃO, OU DE SERVIÇOS CULTURAIS, SOCIAIS OU PESSOAIS                  
+141;GERENTES DE PRODUÇÃO E OPERAÇÕES                                                                                                  
+142;GERENTES DE ÁREAS DE APOIO                                                                                                        
+201;PROFISSIONAIS DA BIOTECNOLOGIA E METROLOGIA                                                                                       
+202;PROFISSIONAIS DA ELETROMECÂNICA                                                                                                   
+203;PESQUISADORES                                                                                                                     
+204;PROFISSIONAIS DE INVESTIGAÇÃO CRIMINAL                                                                                            
+211;MATEMÁTICOS, ESTATÍSTICOS E AFINS                                                                                                 
+212;PROFISSIONAIS DA INFORMÁTICA                                                                                                      
+213;FÍSICOS, QUÍMICOS E AFINS                                                                                                         
+214;ENGENHEIROS, ARQUITETOS E AFINS                                                                                                   
+215;PROFISSIONAIS EM NAVEGAÇÃO AÉREA, MARÍTIMA E FLUVIAL                                                                              
+221;BIÓLOGOS E AFINS                                                                                                                  
+222;AGRÔNOMOS E AFINS                                                                                                                 
+223;PROFISSIONAIS DA MEDICINA, SAÚDE E AFINS                                                                                          
+224;PROFISSIONAIS DA EDUCAÇÃO FÍSICA                                                                                                  
+225;PROFISSIONAIS DA MEDICINA
+226;PROFISSIONAIS DE SAÚDE EM PRATICAS INTEGRATIVAS E COMPLEMENTARES
+231;PROFESSORES DE NÍVEL SUPERIOR NA EDUCAÇÃO INFANTIL E NO ENSINO FUNDAMENTAL                                                        
+232;PROFESSORES DO ENSINO MÉDIO                                                                                                       
+233;PROFESSORES E INSTRUTORES DO ENSINO PROFISSIONAL                                                                                  
+234;PROFESSORES DO ENSINO SUPERIOR                                                                                                    
+239;OUTROS PROFISSIONAIS DO ENSINO NÃO CLASSIFICADOS ANTERIORMENTE                                                                    
+241;ADVOGADOS, PROCURADORES, TABELIÃES E AFINS                                                                                        
+242;ADVOGADOS DO PODER JUDICIÁRIO E DA SEGURANÇA PÚBLICA                                                                              
+251;CIENTISTAS SOCIAIS, PSICÓLOGOS E AFINS                                                                                            
+252;PROFISSIONAIS DE ORGANIZAÇÃO E ADMINISTRAÇÃO DE EMPRESAS E AFINS                                                                  
+253;PROFISSIONAIS DE RELAÇÕES PÚBLICAS, PUBLICIDADE, MARKETING E COMERCIALIZAÇÃO                                                      
+254;AUDITORES FISCAIS PÚBLICOS                                                                                                        
+261;PROFISSIONAIS DA COMUNICAÇÃO E DA INFORMAÇÃO                                                                                      
+262;PROFISSIONAIS DE ESPETÁCULOS E DAS ARTES                                                                                          
+263;MEMBROS DE CULTOS RELIGIOSOS E AFINS                                                                                              
+271;PROFISSIONAIS EM GASTRONOMIA E SERVIÇOS DE ALIMENTAÇÃO
+300;TÉCNICOS MECATRÔNICOS E ELETROMECÂNICOS                                                                                           
+301;TÉCNICOS EM LABORATÓRIO                                                                                                           
+311;TÉCNICO EM CIÊNCIAS FÍSICAS E QUÍMICAS                                                                                            
+312;TÉCNICOS EM CONSTRUÇÃO CIVIL, DE EDIFICAÇÕES E OBRAS DE INFRAESTRUTURA                                                            
+313;TÉCNICOS EM ELETROELETRÔNICA E FOTÔNICA                                                                                           
+314;TÉCNICOS EM METALMECÂNICA                                                                                                         
+316;TÉCNICOS EM MINERALOGIA E GEOLOGIA                                                                                                
+317;TÉCNICOS EM INFORMÁTICA                                                                                                           
+318;DESENHISTAS TÉCNICOS E MODELISTAS                                                                                                 
+319;OUTROS TÉCNICOS DE NÍVEL MÉDIO DAS CIÊNCIAS FÍSICAS, QUÍMICAS, ENGENHARIA E AFINS                                                 
+320;TÉCNICOS EM BIOLOGIA                                                                                                              
+321;TÉCNICOS DA PRODUÇÃO AGROPECUÁRIA                                                                                                 
+322;TÉCNICOS DA CIÊNCIA DA SAÚDE HUMANA                                                                                               
+323;TÉCNICOS DA CIÊNCIA DA SAÚDE ANIMAL                                                                                               
+324;TÉCNICOS EM OPERAÇÃO DE EQUIPAMENTOS E INSTRUMENTOS DE DIAGNÓSTICO                                                                
+325;TÉCNICOS DE BIOQUÍMICA E DA BIOTECNOLOGIA                                                                                         
+328;TÉCNICOS EM NECRÓPSIA E TAXIDERMISTAS                                                                                             
+331;PROFESSORES DE NÍVEL MÉDIO NA EDUCAÇÃO INFANTIL, NO ENSINO FUNDAMENTAL E NO PROFISSIONALIZANTE                                    
+332;PROFESSORES LEIGOS NO ENSINO FUNDAMENTAL E NO  PROFISSIONALIZANTE                                                                 
+333;INSTRUTORES E PROFESSORES DE ESCOLAS LIVRES                                                                                       
+334;INSPETORES DE ALUNOS E AFINS                                                                                                      
+341;TÉCNICOS EM NAVEGAÇÃO AÉREA, MARÍTIMA E FLUVIAL                                                                                   
+342;TÉCNICOS EM TRANSPORTES (LOGÍSTICA)                                                                                               
+351;TÉCNICOS DAS CIÊNCIAS ADMINISTRATIVAS                                                                                             
+352;TÉCNICOS DE INSPEÇÃO, FISCALIZAÇÃO E COORDENAÇÃO ADMINISTRATIVA                                                                   
+353;TÉCNICOS DE NÍVEL MÉDIO EM OPERAÇÕES FINANCEIRAS                                                                                  
+354;TÉCNICOS DE NIVEL MÉDIO EM OPERAÇÕES COMERCIAIS                                                                                   
+371;TÉCNICOS DE SERVIÇOS CULTURAIS                                                                                                    
+372;TÉCNICOS EM OPERAÇÃO DE CÂMARA FOTOGRÁFICA , CINEMA E DE TELEVISÃO                                                                
+373;TÉCNICOS EM OPERAÇÃO DE EMISSORAS DE RÁDIO, SISTEMAS DE TELEVISÃO E DE PRODUTORAS DE VÍDEO                                        
+374;TÉCNICOS EM OPERAÇÃO DE APARELHOS DE SONORIZAÇÃO, CENOGRAFIA E PROJEÇÃO                                                           
+375;DECORADORES E VITRINISTAS                                                                                                         
+376;ARTISTAS DE ARTES POPULARES E MODELOS                                                                                             
+377;ATLETAS, DESPORTISTAS E AFINS                                                                                                     
+391;TÉCNICOS DE NIVEL MÉDIO EM OPERAÇÕES INDUSTRIAIS                                                                                  
+395;TÉCNICOS DE APOIO EM PESQUISA E DESENVOLVIMENTO                                                                                   
+410;SUPERVISORES DE SERVIÇOS ADMINISTRATIVOS (Exceto de atendimento ao público)                                                       
+411;ESCRITURÁRIOS EM GERAL, AGENTES, ASSISTENTES E AUXILIARES ADMINISTRATIVOS                                                         
+412;SECRETÁRIOS DE EXPEDIENTE E OPERADORES DE MÁQUINAS DE ESCRITÓRIOS                                                                 
+413;ESCRITURÁRIOS CONTÁBEIS E DE FINANÇAS                                                                                             
+414;ESCRITURÁRIOS DE CONTROLE DE MATERIAIS E DE APOIO À PRODUÇÃO                                                                      
+415;AUXILIARES DE SERVIÇOS DE BIBLIOTECA, DOCUMENTAÇÃO E CORREIOS                                                                     
+420;SUPERVISORES DE ATENDIMENTO AO PÚBLICO                                                                                            
+421;CAIXAS, BILHETEIROS E AFINS                                                                                                       
+422;TRABALHADORES DE INFORMAÇÕES AO PÚBLICO                                                                                           
+423;DESPACHANTES                                                                                                                      
+424;ENTREVISTADORES, RECENSEADORES E AFINS                                                                                            
+510;SUPERVISORES DOS SERVIÇOS                                                                                                         
+511;TRABALHADORES DOS SERVIÇOS DE TRANSPORTE E TURISMO                                                                                
+512;TRABALHADORES DOS SERVIÇOS DOMÉSTICOS EM GERAL                                                                                    
+513;TRABALHADORES DOS SERVIÇOS DE HOTELARIA E ALIMENTAÇÃO                                                                             
+514;TRABALHADORES NOS SERVIÇOS DE ADMINISTRAÇÃO, CONSERVAÇÃO E MANUTENÇÃO DE EDIFÍCIOS E LOGRADOUROS                                  
+515;TRABALHADORES DOS SERVIÇOS DE SAÚDE                                                                                               
+516;TRABALHADORES NOS SERVIÇOS DE EMBELEZAMENTO E CUIDADOS PESSOAIS                                                                   
+517;TRABALHADORES NOS SERVIÇOS DE PROTEÇÃO E SEGURANÇA                                                                                
+519;OUTROS TRABALHADORES DE SERVIÇOS DIVERSOS                                                                                         
+520;SUPERVISORES DE VENDAS E DE PRESTAÇÃO DE SERVIÇOS                                                                                 
+521;VENDEDORES E DEMONSTRADORES                                                                                                       
+522;REPOSITORES E REMARCADORES DO COMÉRCIO                                                                                            
+523;INSTALADORES DE PRODUTOS E ACESSÓRIOS                                                                                             
+524;VENDEDORES A DOMICÍLIO, AMBULANTES E EM BANCAS                                                                                    
+611;PRODUTORES AGROPECUÁRIOS EM GERAL                                                                                                 
+612;PRODUTORES AGRÍCOLAS                                                                                                              
+613;PRODUTORES EM PECUÁRIA                                                                                                            
+620;SUPERVISORES NA EXPLORAÇÃO AGROPECUÁRIA                                                                                           
+621;TRABALHADORES NA EXPLORAÇÃO AGROPECUÁRIA EM GERAL                                                                                 
+622;TRABALHADORES AGRÍCOLAS                                                                                                           
+623;TRABALHADORES NA PECUÁRIA                                                                                                         
+630;SUPERVISORES NA EXPLORAÇÃO FLORESTAL E PESCA                                                                                      
+631;PESCADORES E CAÇADORES                                                                                                            
+632;EXTRATIVISTAS FLORESTAIS                                                                                                          
+641;TRABALHADORES DA MECANIZAÇÃO AGROPECUÁRIA                                                                                         
+642;TRABALHADORES DA MECANIZAÇÃO FLORESTAL                                                                                            
+643;TRABALHADORES DA IRRIGAÇÃO E DRENAGEM                                                                                             
+710;SUPERVISORES DA EXTRAÇÃO MINERAL E DA CONSTRUÇÃO CIVIL                                                                            
+711;TRABALHADORES DA EXTRAÇÃO MINERAL                                                                                                 
+712;TRABALHADORES DE BENEFICIAMENTO DE MINÉRIOS E PEDRAS ORNAMENTAIS                                                                  
+715;TRABALHADORES DA CONSTRUÇÃO CIVIL E OBRAS PÚBLICAS                                                                                
+716;TRABALHADORES DE ACABAMENTO DE OBRAS                                                                                              
+717;AJUDANTES DE OBRAS                                                                                                                
+720;SUPERVISORES DA TRANSFORMAÇÃO DE METAIS E DE COMPÓSITOS                                                                           
+721;TRABALHADORES DE USINAGEM DE METAIS E DE COMPÓSITOS                                                                               
+722;TRABALHADORES DE CONFORMAÇÃO DE METAIS E DE COMPÓSITOS                                                                            
+723;TRABALHADORES DE TRATAMENTO TÉRMICO E DE SUPERFÍCIES DE METAIS E DE COMPÓSITOS                                                    
+724;TRABALHADORES DE MONTAGEM DE TUBULAÇÕES, ESTRUTURAS METÁLICAS E DE COMPÓSITOS                                                     
+725;MONTADORES DE MÁQUINAS E APARELHOS MECÂNICOS                                                                                      
+730;SUPERVISORES DE MONTAGENS E INSTALAÇÕES ELETROELETRÔNICAS                                                                         
+731;MONTADORES E INSTALADORES DE EQUIPAMENTOS ELETROELETRÔNICOS EM GERAL                                                              
+732;INSTALADORES E REPARADORES DE LINHAS E CABOS ELÉTRICOS E DE COMUNICAÇÕES                                                          
+740;SUPERVISORES DA MECÂNICA DE PRECISÃO E INSTRUMENTOS MUSICAIS                                                                      
+741;MONTADORES E AJUSTADORES DE INSTRUMENTOS DE PRECISÃO                                                                              
+742;MONTADORES E AJUSTADORES DE INSTRUMENTOS MUSICAIS                                                                                 
+750;SUPERVISORES DE JOALHERIA, VIDRARIA, CERÂMICA E AFINS                                                                             
+751;JOALHEIROS E OURIVES                                                                                                              
+752;VIDREIROS, CERAMISTAS E AFINS                                                                                                     
+760;SUPERVISORES NAS INDÚSTRIAS TÊXTIL, DO CURTIMENTO, DO VESTUÁRIO E DAS ARTES GRÁFICAS                                              
+761;TRABALHADORES DAS INDUSTRIAS TÊXTEIS                                                                                              
+762;TRABALHADORES DO TRATAMENTO DE COUROS E PELES                                                                                     
+763;TRABALHADORES DA CONFECÇÃO DE ROUPAS                                                                                              
+764;TRABALHADORES DA CONFECÇÃO DE CALÇADOS                                                                                            
+765;TRABALHADORES DA CONFECÇÃO DE ARTEFATOS DE TECIDOS E COUROS                                                                       
+766;TRABALHADORES DA PRODUÇÃO GRÁFICA                                                                                                 
+768;TRABALHADORES ARTESANAIS DAS ATIVIDADES TÊXTEIS, DO VESTUÁRIO E DAS ARTES GRÁFICAS                                                
+770;SUPERVISORES EM INDÚSTRIA DE MADEIRA, MOBILIÁRIO E DA CARPINTARIA VEICULAR                                                        
+771;MARCENEIROS E AFINS                                                                                                               
+772;TRABALHADORES DA PREPARAÇÃO DA MADEIRA                                                                                            
+773;TRABALHADORES DA TRANSFORMAÇÃO DA MADEIRA E DA FABRICAÇÃO DO MOBILIÁRIO                                                           
+774;TRABALHADORES DE MONTAGEM DE MÓVEIS E ARTEFATOS DE MADEIRA                                                                        
+775;TRABALHADORES EM ACABAMENTO DE MADEIRA E DE MOBILIÁRIO                                                                            
+776;TRABALHADORES ARTESANAIS DA MADEIRA E DO MOBILIÁRIO                                                                               
+777;TRABALHADORES DA CARPINTARIA VEICULAR                                                                                             
+780;SUPERVISORES DE TRABALHADORES DE EMBALAGEM E ETIQUETAGEM                                                                          
+781;OPERADORES DE ROBÔS E EQUIPAMENTOS ESPECIAIS                                                                                      
+782;CONDUTORES DE VEÍCULOS E OPERADORES DE EQUIPAMENTOS DE ELEVAÇÃO E DE MOVIMENTAÇÃO DE CARGAS                                       
+783;TRABALHADORES DE MANOBRAS SOBRE TRILHOS E MOVIMENTAÇÃO E CARGAS                                                                   
+784;EMBALADORES E ALIMENTADORES DE PRODUÇÃO                                                                                           
+791;TRABALHADORES DO ARTESANATO URBANO E RURAL
+810;SUPERVISORES DE PRODUÇÃO, EM INDÚSTRIAS QUÍMICAS, PETROQUÍMICAS E AFINS                                                           
+811;OPERADORES DE INSTALAÇÕES EM INDÚSTRIAS QUÍMICAS, PETROQUÍMICAS E AFINS                                                           
+812;TRABALHADORES DA FABRICAÇÃO DE MUNIÇÃO E EXPLOSIVOS QUÍMICOS                                                                      
+813;OPERADORES DE OUTRAS INSTALAÇÕES QUÍMICAS, PETROQUÍMICAS E AFINS                                                                  
+818;OPERADORES DE OPERAÇÃO UNITÁRIA DE LABORATÓRIO (TRANSVERSAL PARA TODA INDÚSTRIA DE PROCESSOS)                                     
+820;SUPERVISORES DE PRODUÇÃO EM INDÚSTRIAS SIDERÚRGICAS                                                                               
+821;OPERADORES DE INSTALAÇÕES E EQUIPAMENTOS DE PRODUÇÃO DE METAIS E LIGAS- PRIMEIRA FUSÃO                                            
+822;OPERADORES DE INSTALAÇÕES E EQUIPAMENTOS DE PRODUÇÃO DE METAIS E LIGAS- SEGUNDA FUSÃO                                             
+823;TRABALHADORES DE INSTALAÇÕES E EQUIPAMENTOS DE MATERIAL DE CONSTRUÇÃO, CERÂMICA E VIDRO                                           
+828;TRABALHADORES ARTESANAIS DA SIDERURGIA E DE MATERIAIS DE CONSTRUÇÃO                                                               
+830;SUPERVISORES DA FABRICAÇÃO DE CELULOSE E PAPEL                                                                                    
+831;TRABALHADORES DA PREPARAÇÃO DE PASTA DE PAPEL                                                                                     
+832;TRABALHADORES DA FABRICAÇÃO DE PAPEL                                                                                              
+833;CONFECCIONADORES DE PRODUTOS DE PAPEL E PAPELÃO                                                                                   
+840;SUPERVISORES DA FABRICAÇÃO DE ALIMENTOS, BEBIDAS E FUMO                                                                           
+841;OPERADORES DE EQUIPAMENTOS NA PREPARAÇÃO DE ALIMENTOS E BEBIDAS                                                                   
+842;OPERADORES NA PREPARAÇÃO DE FUMO E NA FABRICAÇÃO DE CHARUTOS E CIGARROS                                                           
+848;TRABALHADORES ARTESANAIS NA  AGROINDÚSTRIA, NA INDÚSTRIA DE ALIMENTOS E DO FUMO                                                   
+860;SUPERVISORES DA PRODUÇÃO DE UTILIDADES                                                                                            
+861;OPERADORES NA GERAÇÃO E DISTRIBUIÇÃO DE ENERGIA (CENTRAIS HIDRELÉTRICAS, TERMELÉTRICAS E NUCLEARES)                               
+862;OPERADORES DE UTILIDADES                                                                                                          
+871;OPERADORES DE OUTRAS INSTALAÇÕES INDUSTRIAIS                                                                                      
+910;SUPERVISORES EM SERVIÇOS DE REPARAÇÃO E MANUTENÇÃO MECÂNICA                                                                       
+911;MECÂNICOS DE MANUTENÇÃO DE MÁQUINAS E EQUIPAMENTOS INDUSTRIAIS, COMERCIAIS E RESIDENCIAIS                                         
+913;MECÂNICOS DE MANUTENÇÃO DE MÁQUINAS PESADAS E EQUIPAMENTOS AGRÍCOLAS                                                              
+914;MECÂNICOS DE MANUTENÇÃO VEICULAR                                                                                                  
+915;REPARADORES DE INSTRUMENTOS E EQUIPAMENTOS DE PRECISÃO                                                                            
+919;OUTROS TRABALHADORES NA REPARAÇÃO E MANUTENÇÃO DE EQUIPAMENTOS                                                                    
+950;SUPERVISORES DE MANUTENÇÃO ELETROELETRÔNICA E ELETROMECÂNICA                                                                      
+951;ELETRICISTAS ELETRÔNICOS DE MANUTENÇÃO INDUSTRIAL, COMERCIAL E RESIDENCIAL                                                        
+953;ELETRICISTAS ELETRÔNICOS DE MANUTENÇÃO VEICULAR                                                                                   
+954;MANTENEDORES ELETROMECÂNICOS                                                                                                      
+991;OUTROS TRABALHADORES DA CONSERVAÇÃO E MANUTENÇÃO (EXCETO TRABALHADORES ELEMENTARES)                                               
+992;TRABALHADORES ELEMENTARES DA MANUTENÇÃO                                                                                           
