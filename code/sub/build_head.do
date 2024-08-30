@@ -12,7 +12,7 @@ cap log close
 // build: head RAIS data
 //----------------------------------------------------------------------------//
 
-foreach year of numlist 1985(1)2018 {
+foreach year of numlist 1985(1)2020 {
 	
 	foreach k in establishment worker job {
 		
