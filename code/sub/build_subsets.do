@@ -6,6 +6,10 @@
 clear all
 cap log close
 
+local FIRST_YEAR  ${FIRST_YEAR}
+local SECOND_YEAR ${SECOND_YEAR}
+local LAST_YEAR   ${LAST_YEAR}
+
 //----------------------------------------------------------------------------//
 // build
 //----------------------------------------------------------------------------//
@@ -388,12 +392,12 @@ save "tmp/inflation.dta", replace
 // subsets
 //----------------------------------------------------------------------------//
 
-foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
+foreach year of numlist `FIRST_YEAR'(1)`LAST_YEAR' {
 	
 	if "${SAMPLE}" == "TRUE" {
-		use "output/data/identified/full/`year'.dta", clear
+		use "output/data/full/`year'.dta", clear
 		sample ${SAMPLE_SIZE}, by(municipio)
-		save "output/data/identified/full_sample${SAMPLE_SIZE}/`year'.dta", replace
+		save "output/data/full_sample${SAMPLE_SIZE}/`year'.dta", replace
 	}
 	*
 	
@@ -402,12 +406,12 @@ foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
 	//------------------------------------//
 	
 	if "${SAMPLE}" == "TRUE" {
-		!mkdir "output/data/identified/normalized_sample${SAMPLE_SIZE}/job"
-		use "output/data/identified/full_sample${SAMPLE_SIZE}/`year'.dta", clear
+		!mkdir "output/data/normalized_sample${SAMPLE_SIZE}/job"
+		use "output/data/full_sample${SAMPLE_SIZE}/`year'.dta", clear
 	}
 	else {
-		!mkdir "output/data/identified/normalized/job"
-		use "output/data/identified/full/`year'.dta", clear
+		!mkdir "output/data/normalized/job"
+		use "output/data/full/`year'.dta", clear
 	}
 	*
 	
@@ -601,10 +605,10 @@ foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
 	order `IDs' year
 	
 	if "${SAMPLE}" == "TRUE" {
-		save "output/data/identified/normalized_sample${SAMPLE_SIZE}/job/`year'.dta", replace
+		save "output/data/normalized_sample${SAMPLE_SIZE}/job/`year'.dta", replace
 	}
 	else {
-		save "output/data/identified/normalized/job/`year'.dta", replace
+		save "output/data/normalized/job/`year'.dta", replace
 	}
 	*
 	
@@ -613,12 +617,12 @@ foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
 	//------------------------------------//
 	
 	if "${SAMPLE}" == "TRUE" {
-		!mkdir "output/data/identified/normalized_sample${SAMPLE_SIZE}/worker"
-		use "output/data/identified/full_sample${SAMPLE_SIZE}/`year'.dta"
+		!mkdir "output/data/normalized_sample${SAMPLE_SIZE}/worker"
+		use "output/data/full_sample${SAMPLE_SIZE}/`year'.dta"
 	}
 	else {
-		!mkdir "output/data/identified/normalized/worker"
-		use "output/data/identified/full/`year'.dta", clear
+		!mkdir "output/data/normalized/worker"
+		use "output/data/full/`year'.dta", clear
 	}
 	*
 	
@@ -697,10 +701,10 @@ foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
 	order `IDs' year
 	
 	if "${SAMPLE}" == "TRUE" {
-		save "output/data/identified/normalized_sample${SAMPLE_SIZE}/worker/`year'.dta", replace
+		save "output/data/normalized_sample${SAMPLE_SIZE}/worker/`year'.dta", replace
 	}
 	else {
-		save "output/data/identified/normalized/worker/`year'.dta", replace
+		save "output/data/normalized/worker/`year'.dta", replace
 	}
 	*
 	
@@ -709,12 +713,12 @@ foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
 	//------------------------------------//
 	
 	if "${SAMPLE}" == "TRUE" {
-		!mkdir "output/data/identified/normalized_sample${SAMPLE_SIZE}/establishment"
-		use "output/data/identified/full_sample${SAMPLE_SIZE}/`year'.dta"
+		!mkdir "output/data/normalized_sample${SAMPLE_SIZE}/establishment"
+		use "output/data/full_sample${SAMPLE_SIZE}/`year'.dta"
 	}
 	else {
-		!mkdir "output/data/identified/normalized/establishment"
-		use "output/data/identified/full/`year'.dta", clear
+		!mkdir "output/data/normalized/establishment"
+		use "output/data/full/`year'.dta", clear
 	}
 	*
 	
@@ -818,10 +822,10 @@ foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
 	order `IDs' year
 	
 	if "${SAMPLE}" == "TRUE" {
-		save "output/data/identified/normalized_sample${SAMPLE_SIZE}/establishment/`year'.dta", replace
+		save "output/data/normalized_sample${SAMPLE_SIZE}/establishment/`year'.dta", replace
 	}
 	else {
-		save "output/data/identified/normalized/establishment/`year'.dta", replace
+		save "output/data/normalized/establishment/`year'.dta", replace
 	}
 	*
 	
@@ -840,7 +844,7 @@ foreach year of numlist ${FIRST_YEAR}(1)${LAST_YEAR} {
 
 foreach year of numlist 2003(1)${LAST_YEAR} {
 	
-	use "output/data/identified/normalized/worker/`year'.dta", clear
+	use "output/data/normalized/worker/`year'.dta", clear
 	keep id_worker_PIS id_worker_CPF
 	save "tmp/mapping_PIS_CPF_`year'.dta", replace
 }
@@ -874,8 +878,8 @@ foreach year of numlist ${FIRST_YEAR}(1)2002 {
 	
 	foreach k in job worker {
 		
-		if "${SAMPLE}" == "TRUE"	 use "output/data/identified/normalized_sample${SAMPLE_SIZE}/`k'/`year'.dta", clear
-		if "${SAMPLE}" == "FALSE" use "output/data/identified/normalized/`k'/`year'.dta", clear
+		if "${SAMPLE}" == "TRUE"	 use "output/data/normalized_sample${SAMPLE_SIZE}/`k'/`year'.dta", clear
+		if "${SAMPLE}" == "FALSE" use "output/data/normalized/`k'/`year'.dta", clear
 		
 		cap drop id_worker_CPF
 		
@@ -885,8 +889,8 @@ foreach year of numlist ${FIRST_YEAR}(1)2002 {
 
 		order id_worker_CPF, a(id_worker_PIS)
 		
-		if "${SAMPLE}" == "TRUE"	 save "output/data/identified/normalized_sample${SAMPLE_SIZE}/`k'/`year'.dta", replace
-		if "${SAMPLE}" == "FALSE" save "output/data/identified/normalized/`k'/`year'.dta", replace
+		if "${SAMPLE}" == "TRUE"	 save "output/data/normalized_sample${SAMPLE_SIZE}/`k'/`year'.dta", replace
+		if "${SAMPLE}" == "FALSE" save "output/data/normalized/`k'/`year'.dta", replace
 		
 	}
 }
@@ -900,10 +904,10 @@ if "${SAMPLE}" == "TRUE" {
 
 	foreach k in job establishment worker {
 		
-		use "output/data/identified/normalized_sample${SAMPLE_SIZE}/`k'/${FIRST_YEAR}.dta", clear
+		use "output/data/normalized_sample${SAMPLE_SIZE}/`k'/${FIRST_YEAR}.dta", clear
 		
 		foreach year of numlist ${SECOND_YEAR}(1)${LAST_YEAR} {
-			append using "output/data/identified/normalized_sample${SAMPLE_SIZE}/`k'/`year'.dta"
+			append using "output/data/normalized_sample${SAMPLE_SIZE}/`k'/`year'.dta"
 		}
 		*
 		
@@ -917,7 +921,7 @@ if "${SAMPLE}" == "TRUE" {
 		
 		compress
 		
-		save "output/data/identified/normalized_sample${SAMPLE_SIZE}/`k'/${FIRST_YEAR}-${LAST_YEAR}.dta", replace
+		save "output/data/normalized_sample${SAMPLE_SIZE}/`k'/${FIRST_YEAR}-${LAST_YEAR}.dta", replace
 		
 	}
 }
