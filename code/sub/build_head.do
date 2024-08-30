@@ -6,7 +6,7 @@
 clear all
 cap log close
 
-!mkdir "output/data/identified/normalized_head"
+!mkdir "output/data/normalized_head"
 
 //----------------------------------------------------------------------------//
 // build: head RAIS data

@@ -506,7 +506,7 @@ foreach state in `states' {
 
 compress
 
-save "output/data/identified/full/2018.dta", replace
+save "output/data/full/2018.dta", replace
 
 foreach state in `states' {
 	erase "tmp/2018_`state'.dta"
